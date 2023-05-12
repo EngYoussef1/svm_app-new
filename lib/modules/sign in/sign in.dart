@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../layout/layout.dart';
 import '../home/home.dart';
@@ -20,19 +22,42 @@ class _Sign_inState extends State<Sign_in> {
   var passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
-  Future<void> signIn() async {
-    try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+  signInWithEmail() async {
+    if(formKey.currentState!.validate())
+    {
+      try {
+        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text,
           password:  passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        );
+        return credential;
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          Fluttertoast.showToast(msg: "No user found for that email.");
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          Fluttertoast.showToast(msg: "Wrong password provided for that user.");
+          print('Wrong password provided for that user.');
+        }
       }
     }
+
   }
 
   @override
@@ -138,11 +163,15 @@ class _Sign_inState extends State<Sign_in> {
                         SizedBox(
                           height: 30,
                         ),
-                        MaterialButton(onPressed: (){
-                          if(formKey.currentState!.validate())
-                          {
-                            print(emailController.text);
-                            print(passwordController.text);
+                        MaterialButton(onPressed: ()async{
+                          var userData=await signInWithEmail();
+                          if(userData!=null){
+                            Navigator.pushAndRemoveUntil(
+                                context,MaterialPageRoute(
+                                builder: (context)=> const NavigationBottom()
+                            ),
+                                    (Route<dynamic>  route) => false
+                            );
                           }
                         },
                           child: Container(
@@ -193,7 +222,17 @@ class _Sign_inState extends State<Sign_in> {
                               SizedBox(
                                 width: 30,
                               ),
-                              MaterialButton(onPressed: (){},
+                              MaterialButton(onPressed: ()async{
+                               var userData=await signInWithGoogle();
+                               if(userData!=null){
+                                 Navigator.pushAndRemoveUntil(
+                                     context,MaterialPageRoute(
+                                     builder: (context)=> const NavigationBottom()
+                                 ),
+                                         (Route<dynamic>  route) => false
+                                 );
+                               }
+                              },
                                 child:Image.asset("images/google.png",width: 50,height: 50,),
                               ),
                               SizedBox(

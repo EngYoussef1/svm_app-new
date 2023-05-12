@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../models/productClass.dart';
 import '../../shared/componant/counter_operations.dart';
 
 import '../Drawer/drawer.dart';
@@ -12,14 +13,10 @@ class MyCart extends StatefulWidget {
 }
 
 class _MyCartState extends State<MyCart> {
-  List products=[
-    'Chipsy',
-    'fayrouz',
-    'Cocacola',
-    'Cocacola',
-    'fayrouz',
-
-
+  List<CardItem> products = [
+    CardItem(name: "Chipsy" , detils: "chease"),
+    CardItem(name: "Domty", detils: "mango" ),
+    CardItem(name: "Tiger" , detils: "chease"),
   ];
   @override
   Widget build(BuildContext context) {
@@ -85,7 +82,7 @@ class _MyCartState extends State<MyCart> {
                                       width: 180,
                                       child: Padding(
                                         padding: const EdgeInsets.only(left: 20,top:10),
-                                        child: Text('${products[index]}',style: TextStyle(fontSize: 25),),
+                                        child: Text(products[index].name,style: TextStyle(fontSize: 25),),
                                       ),
                                     ),
 
@@ -110,18 +107,19 @@ class _MyCartState extends State<MyCart> {
                                         iconSize: 40,
                                         onPressed: (){
                                           setState(() {
-                                            decrementCounter();
+                                            products[index].qty -= 1;
                                           });
                                         },
                                         icon:Icon(Icons.remove_circle_outline
                                         )
                                     ),
-                                    Text('$counter',style: TextStyle(fontSize: 40),),
+                                    Text(products[index].qty > 0 ? products[index].qty.toString() : '0',
+                                      style: products[index].qty>9? TextStyle(fontSize: 30):TextStyle(fontSize: 40),),
                                     IconButton(
                                         iconSize: 40,
                                         onPressed: (){
                                           setState(() {
-                                            incrementCounter();
+                                            products[index].qty += 1;
                                           });
                                         },
                                         icon:Icon(Icons.add_circle_outline
@@ -152,7 +150,7 @@ class _MyCartState extends State<MyCart> {
                                       child: Text("total",style: TextStyle(fontSize: 25),),
                                     ),
                                   ),
-                                  Text('\$16',style: TextStyle(fontSize: 25),),
+                                  Text('${products[index].price}',style: TextStyle(fontSize: 25),),
 
                                 ],
                               ),

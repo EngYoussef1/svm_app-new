@@ -1,8 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
+import 'layout/layout.dart';
+import 'modules/Entry/OnBordingEntryStates.dart';
 import 'modules/sign in/sign in.dart';
+
+bool isSignIn = FirebaseAuth.instance.currentUser != null;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +21,13 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
+  userFirstPage(){
+    if (!isSignIn) {
+      return OnboardingEntryMode();
+    } else {
+      return NavigationBottom();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -66,7 +78,7 @@ class MyApp extends StatelessWidget {
         ),
 
         home: SafeArea(
-            child:Sign_in()
+            child:userFirstPage()
         )
     );
   }

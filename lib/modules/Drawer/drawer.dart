@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../My cart/my cart.dart';
@@ -6,6 +7,7 @@ import '../My orders/my order.dart';
 import '../favorites/favorite.dart';
 import '../hold out/hold out.dart';
 import '../home/home.dart';
+import '../sign in/sign in.dart';
 
 class drawerview extends StatelessWidget {
   const drawerview({Key? key}) : super(key: key);
@@ -147,7 +149,15 @@ class drawerview extends StatelessWidget {
               ),
             ),
             MaterialButton(
-              onPressed: (){},
+              onPressed: ()async{
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushAndRemoveUntil(
+                    context,MaterialPageRoute(
+                    builder: (context)=> const Sign_in()
+                ),
+                        (Route<dynamic>  route) => false
+                );
+              },
               child: ListTile(
                 leading: Icon(Icons.logout,size: 40,),
                 title: Text("Sign out",style: TextStyle(fontSize: 25),),

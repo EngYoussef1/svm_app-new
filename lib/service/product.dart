@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import '../../shared/componant/counter_operations.dart';
+import '../models/productClass.dart';
 class products extends StatefulWidget {
   const products({Key? key}) : super(key: key);
 
@@ -9,15 +10,10 @@ class products extends StatefulWidget {
 }
 
 class _productsState extends State<products> {
-  List products=[
-    'Chipsy',
-    'Domty',
-    'Tiger',
-  ];
-  List productsdetails=[
-    'chease',
-    'mango',
-    'chease',
+  List<CardItem> products = [
+    CardItem(name: "Chipsy" , detils: "chease"),
+    CardItem(name: "Domty", detils: "mango" ),
+    CardItem(name: "Tiger" , detils: "chease"),
   ];
   List<int> selectedItem = [];
   @override
@@ -71,8 +67,8 @@ class _productsState extends State<products> {
                               width: 200,
                               child: ListTile(
                                 contentPadding: EdgeInsets.symmetric(horizontal: 1),
-                                title: Text('${products[index]}',style: TextStyle(fontSize: 25),),
-                                subtitle: Text('${productsdetails[index]}',style: TextStyle(fontSize: 25 ,color: Colors.grey),),
+                                title: Text(products[index].name,style: TextStyle(fontSize: 25),),
+                                subtitle: Text(products[index].detils,style: TextStyle(fontSize: 25 ,color: Colors.grey),),
                                 trailing: IconButton(
                                   onPressed: () {
                                     toggleIconView(index);
@@ -98,7 +94,7 @@ class _productsState extends State<products> {
                                       iconSize: 35,
                                       onPressed: (){
                                       setState(() {
-                                        decrementCounter();
+                                        products[index].qty -= 1;
                                       });
 
 
@@ -106,12 +102,13 @@ class _productsState extends State<products> {
                                       icon:Icon(Icons.remove_circle_outline
                                       )
                                   ),
-                                  Text('$counter',style: TextStyle(fontSize: 35),),
+                                  Text(products[index].qty > 0 ? products[index].qty.toString() : '0',
+                                    style: products[index].qty>9? TextStyle(fontSize: 30):TextStyle(fontSize: 40),),
                                   IconButton(
                                       iconSize: 35,
                                       onPressed: (){
                                         setState(() {
-                                          incrementCounter();
+                                          products[index].qty += 1;
                                         });
                                       },
                                       icon:Icon(Icons.add_circle_outline
@@ -146,7 +143,7 @@ class _productsState extends State<products> {
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(right: 10),
-                                      child: Text('\$16',style: TextStyle(fontSize: 25),)
+                                      child: Text('${products[index].price}',style: TextStyle(fontSize: 25),)
                                   ),
 
                                 ],
