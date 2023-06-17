@@ -110,6 +110,7 @@ class _Sign_inState extends State<Sign_in> {
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Email',
+                                  labelStyle: TextStyle(fontSize: 30),
                                 ),
                                 validator: ( value)
                                 {
@@ -135,6 +136,7 @@ class _Sign_inState extends State<Sign_in> {
                                 decoration:  InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'password',
+                                  labelStyle: TextStyle(fontSize: 30),
                                     suffixIcon:IconButton(onPressed:(){
                                       setState(()
                                       {
