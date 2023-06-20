@@ -1,7 +1,10 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../service/auth.dart';
+import '../../shared/provider/authprovider.dart';
 import '../My cart/my cart.dart';
 import '../My orders/my order.dart';
 import '../favorites/favorite.dart';
@@ -10,7 +13,9 @@ import '../home/home.dart';
 import '../sign in/sign in.dart';
 
 class drawerview extends StatelessWidget {
-  const drawerview({Key? key}) : super(key: key);
+   drawerview({Key? key}) : super(key: key);
+
+   User? currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +53,8 @@ class drawerview extends StatelessWidget {
                     color: Colors.white
                 ),
               ),
-              Text("youssefashrf@gmail.com",
-                style: TextStyle(
+              Text('${currentUser?.email}',
+                 style: TextStyle(
                     fontSize: 25,
                     fontWeight:FontWeight.w500,
                     color: Colors.white

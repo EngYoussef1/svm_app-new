@@ -1,9 +1,22 @@
+import 'package:firebase_database/firebase_database.dart';
+
 class CardItem {
+
+
   String name;
-  String detils;
-  int qty;
+  String details;
+  int amount;
   String price;
+  bool isFavorite;
 
   // I've defined some default values but it could be anything else
-  CardItem({required this.name,required this.detils, this.qty = 0, this.price = "\$10"});
+  CardItem({
+    required this.name,
+    required this.details,
+    this.amount = 0,
+    this.price = "\$10",
+    this.isFavorite=false
+  });
+
+
 }

@@ -13,10 +13,11 @@ class MyCart extends StatefulWidget {
 }
 
 class _MyCartState extends State<MyCart> {
+
   List<CardItem> products = [
-    CardItem(name: "Chipsy" , detils: "chease"),
-    CardItem(name: "Domty", detils: "mango" ),
-    CardItem(name: "Tiger" , detils: "chease"),
+    CardItem(name: "Chipsy" , details: "chease"),
+    CardItem(name: "Domty", details: "mango" ),
+    CardItem(name: "Tiger" , details: "chease"),
   ];
   @override
   Widget build(BuildContext context) {
@@ -107,19 +108,19 @@ class _MyCartState extends State<MyCart> {
                                         iconSize: 40,
                                         onPressed: (){
                                           setState(() {
-                                            products[index].qty -= 1;
+                                            products[index].amount -= 1;
                                           });
                                         },
                                         icon:Icon(Icons.remove_circle_outline
                                         )
                                     ),
-                                    Text(products[index].qty > 0 ? products[index].qty.toString() : '0',
-                                      style: products[index].qty>9? TextStyle(fontSize: 30):TextStyle(fontSize: 40),),
+                                    Text(products[index].amount > 0 ? products[index].amount.toString() : '0',
+                                      style: products[index].amount>9? TextStyle(fontSize: 30):TextStyle(fontSize: 40),),
                                     IconButton(
                                         iconSize: 40,
                                         onPressed: (){
                                           setState(() {
-                                            products[index].qty += 1;
+                                            products[index].amount += 1;
                                           });
                                         },
                                         icon:Icon(Icons.add_circle_outline

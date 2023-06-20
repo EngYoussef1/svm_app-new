@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:svm_app/shared/cnstant/contant.dart';
 import '../../shared/componant/counter_operations.dart';
 import '../models/productClass.dart';
 class products extends StatefulWidget {
@@ -11,10 +12,11 @@ class products extends StatefulWidget {
 
 class _productsState extends State<products> {
   List<CardItem> products = [
-    CardItem(name: "Chipsy" , detils: "chease"),
-    CardItem(name: "Domty", detils: "mango" ),
-    CardItem(name: "Tiger" , detils: "chease"),
+    CardItem(name: "Chipsy" , details: "chease"),
+    CardItem(name: "Domty", details: "mango" ),
+    CardItem(name: "Tiger" , details: "chease"),
   ];
+
   List<int> selectedItem = [];
   @override
   Widget build(BuildContext context) {
@@ -68,16 +70,18 @@ class _productsState extends State<products> {
                               child: ListTile(
                                 contentPadding: EdgeInsets.symmetric(horizontal: 1),
                                 title: Text(products[index].name,style: TextStyle(fontSize: 25),),
-                                subtitle: Text(products[index].detils,style: TextStyle(fontSize: 25 ,color: Colors.grey),),
+                                subtitle: Text(products[index].details,style: TextStyle(fontSize: 25 ,color: Colors.grey),),
                                 trailing: IconButton(
                                   onPressed: () {
-                                    toggleIconView(index);
+                                    dprf.child("cart").push().set({
+                                      'name':products[index].name,
+                                      'amount':products[index].amount,
+                                      'price':products[index].price,
+                                    });
                                   },
                                   iconSize: 40,
-                                  icon: Icon(selectedItem.contains(index)
-                                      ? Icons.favorite
-                                      : Icons.favorite_border),
-                                  color: selectedItem.contains(index) ? Colors.red : Colors.red,
+                                  icon: Icon(Icons.add),
+                                  color:  Colors.red,
                                 ),
                               ),
                             ),
@@ -90,25 +94,25 @@ class _productsState extends State<products> {
                                     width: 90,
                                   ),
                                   IconButton(
-                                    alignment: Alignment.centerRight,
+                                      alignment: Alignment.centerRight,
                                       iconSize: 35,
                                       onPressed: (){
-                                      setState(() {
-                                        products[index].qty -= 1;
-                                      });
+                                        setState(() {
+                                          products[index].amount -= 1;
+                                        });
 
 
                                       },
                                       icon:Icon(Icons.remove_circle_outline
                                       )
                                   ),
-                                  Text(products[index].qty > 0 ? products[index].qty.toString() : '0',
-                                    style: products[index].qty>9? TextStyle(fontSize: 30):TextStyle(fontSize: 40),),
+                                  Text(products[index].amount > 0 ? products[index].amount.toString() : '0',
+                                    style: products[index].amount>9? TextStyle(fontSize: 30):TextStyle(fontSize: 40),),
                                   IconButton(
                                       iconSize: 35,
                                       onPressed: (){
                                         setState(() {
-                                          products[index].qty += 1;
+                                          products[index].amount += 1;
                                         });
                                       },
                                       icon:Icon(Icons.add_circle_outline
@@ -142,7 +146,7 @@ class _productsState extends State<products> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(right: 10),
+                                      margin: EdgeInsets.only(right: 10),
                                       child: Text('${products[index].price}',style: TextStyle(fontSize: 25),)
                                   ),
 

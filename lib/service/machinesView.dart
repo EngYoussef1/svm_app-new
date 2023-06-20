@@ -1,5 +1,7 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:svm_app/shared/cnstant/contant.dart';
 
 
 class machines extends StatefulWidget {
@@ -17,7 +19,6 @@ class _machinesState extends State<machines> {
    'main',
   ];
  // List<bool> favoritecontrol=List.filled(4,   favoritecoler);
-
  List<int> selectedItem = [];
  double? _ratingValue;
   @override
@@ -80,8 +81,9 @@ class _machinesState extends State<machines> {
                           // subtitle:Text("all ptoduct",style: TextStyle(fontSize: 20)) ,
                           // horizontalTitleGap: 20,
                           trailing:IconButton(
-                            onPressed: () {
+                            onPressed: ()async {
                               toggleIconView(index);
+
                             },
                             icon: Icon(selectedItem.contains(index)
                                 ? Icons.favorite

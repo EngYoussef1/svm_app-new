@@ -1,11 +1,17 @@
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:provider/provider.dart';
 
 import '../../layout/layout.dart';
+import '../../service/auth.dart';
+import '../../shared/cnstant/contant.dart';
+import '../../shared/provider/modelHud.dart';
 import '../home/home.dart';
 import '../sign up/sign up.dart';
 
@@ -21,7 +27,7 @@ class _Sign_inState extends State<Sign_in> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-
+  final _auth = Auth();
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -34,7 +40,6 @@ class _Sign_inState extends State<Sign_in> {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
@@ -46,6 +51,11 @@ class _Sign_inState extends State<Sign_in> {
           email: emailController.text,
           password:  passwordController.text,
         );
+        var user= dprf.child('user').get().then((DataSnapshot dataSnapshot) {
+          print(dataSnapshot.value.toString());
+        });
+
+        print(credential.user);
         return credential;
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -142,7 +152,7 @@ class _Sign_inState extends State<Sign_in> {
                                       {
                                         showpassword = !showpassword;
                                       });
-                                    } , icon:Icon(showpassword ? Icons.visibility:Icons.visibility_off,),
+                                    } , icon:Icon(showpassword ? Icons.visibility_off:Icons.visibility,),
                                 ),
                               ),
                                 validator: ( value)
