@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:svm_app/shared/provider/adminMode.dart';
 import 'package:svm_app/shared/provider/authprovider.dart';
 import 'package:svm_app/shared/provider/modelHud.dart';
 
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ModelHud>(
           create: (context) => ModelHud(),
         ),
+        ChangeNotifierProvider<AdminMode>(
+          create: (context) => AdminMode(),
+        )
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,

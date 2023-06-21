@@ -234,7 +234,7 @@ class _Sign_upState extends State<Sign_up> {
                               dprf.child("user").child(authResult.user!.uid).set({
                                 'email':authResult.user?.email,
                                 'balance':100,
-
+                                'name':fullname.text,
                               });
 
 

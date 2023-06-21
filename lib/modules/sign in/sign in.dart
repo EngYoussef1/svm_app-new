@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../layout/layout.dart';
 import '../../service/auth.dart';
 import '../../shared/cnstant/contant.dart';
+import '../../shared/provider/adminMode.dart';
 import '../../shared/provider/modelHud.dart';
 import '../home/home.dart';
 import '../sign up/sign up.dart';
@@ -28,13 +29,12 @@ class _Sign_inState extends State<Sign_in> {
   var passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   final _auth = Auth();
+  final adminPassword = 'admin1234';
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
@@ -45,6 +45,7 @@ class _Sign_inState extends State<Sign_in> {
   }
   signInWithEmail() async {
     if(formKey.currentState!.validate())
+    formKey.currentState!.save();
     {
       try {
         final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -54,9 +55,9 @@ class _Sign_inState extends State<Sign_in> {
         var user= dprf.child('user').get().then((DataSnapshot dataSnapshot) {
           print(dataSnapshot.value.toString());
         });
-
-        print(credential.user);
+        print(credential);
         return credential;
+
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           Fluttertoast.showToast(msg: "No user found for that email.");
@@ -65,10 +66,11 @@ class _Sign_inState extends State<Sign_in> {
           Fluttertoast.showToast(msg: "Wrong password provided for that user.");
           print('Wrong password provided for that user.');
         }
+        }
       }
     }
 
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -176,15 +178,17 @@ class _Sign_inState extends State<Sign_in> {
                           height: 30,
                         ),
                         MaterialButton(onPressed: ()async{
-                          var userData=await signInWithEmail();
+                          var userData = await signInWithEmail();
                           if(userData!=null){
                             Navigator.pushAndRemoveUntil(
-                                context,MaterialPageRoute(
-                                builder: (context)=> const NavigationBottom()
+                            context, MaterialPageRoute(
+                            builder: (context)=>NavigationBottom()
                             ),
-                                    (Route<dynamic>  route) => false
-                            );
+                            (route) => false
+                          );
+
                           }
+
                         },
                           child: Container(
                             // width: double.infinity,

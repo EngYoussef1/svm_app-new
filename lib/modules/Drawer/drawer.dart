@@ -1,7 +1,9 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:svm_app/shared/cnstant/contant.dart';
 
 import '../../service/auth.dart';
 import '../../shared/provider/authprovider.dart';
@@ -16,6 +18,14 @@ class drawerview extends StatelessWidget {
    drawerview({Key? key}) : super(key: key);
 
    User? currentUser = FirebaseAuth.instance.currentUser;
+   String? Id =FirebaseAuth.instance.currentUser?.uid;
+   Future<String> getName(id) async {
+     var snapshot = await dprf.child('user').child(id).get();
+     var data = snapshot.value as Map<dynamic, dynamic>;
+     var name = data!['name'] ;
+     print(name);
+     return name;
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +55,26 @@ class drawerview extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                "Youssef ashrf",
-                style: TextStyle(
-                    fontSize: 25,
-                    fontWeight:FontWeight.w500,
-                    color: Colors.white
-                ),
+              FutureBuilder(
+                future: getName(Id),
+                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator(); // Show a loading indicator while waiting for the data
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    var name = snapshot.data;
+                    return Text(
+                        snapshot.data ?? '',
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight:FontWeight.w500,
+                          color: Colors.white
+                      ),
+                    ); // Display the retrieved name
+                  }
+                },
+
               ),
               Text('${currentUser?.email}',
                  style: TextStyle(
