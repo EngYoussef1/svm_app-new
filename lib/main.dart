@@ -1,16 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:svm_app/modules/payment/tryPayment/Constants/dio_helper.dart';
 
 import 'firebase_options.dart';
 import 'layout/layout.dart';
 import 'modules/Entry/OnBordingEntryStates.dart';
+import 'modules/payment/tryPayment/callingPayment.dart';
 import 'modules/sign in/sign in.dart';
+
+import 'modules/payment/tryPayment/Constants/dio_helper.dart';
 
 bool isSignIn = FirebaseAuth.instance.currentUser != null;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DioHelper.initDio();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -78,7 +83,8 @@ class MyApp extends StatelessWidget {
         ),
 
         home: SafeArea(
-            child:userFirstPage()
+          child: callingRegisterScreen(),
+           // child:userFirstPage()
         )
     );
   }

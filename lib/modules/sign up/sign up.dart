@@ -44,10 +44,7 @@ class _Sign_upState extends State<Sign_up> {
         print(e);
       }
     }
-
   }
-
-
 
   var formKey = GlobalKey<FormState>();
   @override
