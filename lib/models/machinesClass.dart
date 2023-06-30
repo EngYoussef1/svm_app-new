@@ -1,17 +1,15 @@
+import 'package:flutter/src/widgets/editable_text.dart';
+
 class machine {
- String key;
- String name;
- String image;
- int rate;
- bool isFavorite;
 
- machine(this.key,this.name,this.image,this.rate,this.isFavorite);
+ String name='';
+ String image='';
+ double latitude=0;
+ double longitude=0;
+ String id;
 
- createMachine(){
 
- }
+ machine( {required String image, required String name, required double latitude, required double longitude, this.id=''});
 
- getMachine(){
 
- }
 }

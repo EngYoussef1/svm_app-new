@@ -2,7 +2,10 @@
 import 'package:firebase_database/firebase_database.dart';
 
 final DatabaseReference dprf=FirebaseDatabase.instance.ref();
-const String kName = 'name';
-const String kAddress = 'address';
-const String kTotallPrice = 'total_price';
-const String kPrice = 'price';
+const String kmachinename = 'name';
+const String kmachineimage = 'image';
+const String klatitude = 'latitude';
+const String klongitude = 'longitude';
+const String kmachinerate = 'rate';
+const String kmachineslots = 'slots';
+const String kmachineDetails = 'details';

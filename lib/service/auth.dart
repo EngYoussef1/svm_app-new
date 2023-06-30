@@ -18,8 +18,8 @@ class Auth {
     return authResult;
   }
 
-  Future<User?> getUser() async {
-    return _auth.currentUser;
+  getUser() async {
+    return _auth.currentUser!.uid ;
   }
 
   Future<void> signOut() async {

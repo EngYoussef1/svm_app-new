@@ -9,6 +9,7 @@ import 'package:svm_app/shared/provider/modelHud.dart';
 import 'firebase_options.dart';
 import 'layout/layout.dart';
 import 'modules/Entry/OnBordingEntryStates.dart';
+import 'modules/admin/adminHome.dart';
 import 'modules/sign in/sign in.dart';
 
 bool isSignIn = FirebaseAuth.instance.currentUser != null;
@@ -26,10 +27,16 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   userFirstPage(){
+    String? adminEmail='admin@gmail.com';
     if (!isSignIn) {
       return OnboardingEntryMode();
     } else {
-      return NavigationBottom();
+      if(FirebaseAuth.instance.currentUser!.email==adminEmail ){
+        return adminHome();
+      }else{
+        return NavigationBottom();
+      }
+
     }
   }
   @override

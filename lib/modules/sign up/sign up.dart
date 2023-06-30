@@ -151,7 +151,7 @@ class _Sign_upState extends State<Sign_up> {
                               TextFormField(
                                 controller: passwordController,
                                 obscureText: showpassword,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.text,
                                 decoration:  InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'password',
