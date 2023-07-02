@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:provider/provider.dart';
+
+import '../../service/auth.dart';
+import '../../shared/cnstant/contant.dart';
+import '../../shared/provider/authprovider.dart';
+import '../../shared/provider/modelHud.dart';
 
 
 class Sign_up extends StatefulWidget {
@@ -20,30 +27,9 @@ class _Sign_upState extends State<Sign_up> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   // var confirmpasswordController = TextEditingController();
-
+  final _auth = Auth();
   signUp() async {
-    if(formKey.currentState!.validate())
-    {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text
-        );
-       return userCredential;
 
-        // handle successful registration here
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          Fluttertoast.showToast(msg: "The password provided is too weak.");
-        } else if (e.code == 'email-already-in-use') {
-          Fluttertoast.showToast(msg: "The account already exists for that email.");
-        } else {
-          Fluttertoast.showToast(msg: "Unknown error occurred.");
-        }
-      } catch (e) {
-        print(e);
-      }
-    }
   }
 
   var formKey = GlobalKey<FormState>();
@@ -162,7 +148,7 @@ class _Sign_upState extends State<Sign_up> {
                               TextFormField(
                                 controller: passwordController,
                                 obscureText: showpassword,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.text,
                                 decoration:  InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'password',
@@ -172,7 +158,7 @@ class _Sign_upState extends State<Sign_up> {
                                     {
                                       showpassword = !showpassword;
                                     });
-                                  } , icon:Icon(showpassword ? Icons.visibility:Icons.visibility_off,),
+                                  } , icon:Icon(showpassword ? Icons.visibility_off:Icons.visibility,),
                                   ),
                                 ),
                                 validator: ( value)
@@ -235,11 +221,38 @@ class _Sign_upState extends State<Sign_up> {
                           height: 20,
                         ),
                         MaterialButton(onPressed: () async{
-                         var userData=await signUp();
-                         if(userData!=null){
-                           Navigator.pop(context);
-                         }
 
+                          if(formKey.currentState!.validate())
+                          {
+                            try {
+
+                              var authResult = await _auth.signUp( emailController.text,passwordController.text);
+                              print(authResult.user?.uid);
+                              dprf.child("user").child(authResult.user!.uid).set({
+                                'email':authResult.user?.email,
+                                'balance':100,
+                                'name':fullname.text,
+                              });
+
+
+                              Navigator.pop(context);
+
+
+
+                              // handle successful registration here
+                            } on FirebaseAuthException catch (e) {
+
+                              if (e.code == 'weak-password') {
+                                Fluttertoast.showToast(msg: "The password provided is too weak.");
+                              } else if (e.code == 'email-already-in-use') {
+                                Fluttertoast.showToast(msg: "The account already exists for that email.");
+                              } else {
+                                Fluttertoast.showToast(msg: "Unknown error occurred.");
+                              }
+                            } catch (e) {
+                              print(e);
+                            }
+                          }
 
                         },
                           child: Container(

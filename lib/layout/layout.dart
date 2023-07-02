@@ -13,7 +13,7 @@ class NavigationBottom extends StatefulWidget {
 }
 
 class _NavigationBottomState extends State<NavigationBottom> {
-  int choosenbar=0;
+  int choosenbar=1;
   List<Widget> screens=[
     FavouritePage(),
     Home(),

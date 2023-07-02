@@ -1,26 +1,22 @@
 
 import 'package:flutter/material.dart';
-import 'package:svm_app/service/store.dart';
-import 'package:svm_app/shared/cnstant/contant.dart';
-import '../../shared/componant/counter_operations.dart';
-import '../models/productClass.dart';
-class products extends StatefulWidget {
+
+import '../../models/productClass.dart';
+import '../../service/store.dart';
+import 'editProduct.dart';
+
+class ViewProduct extends StatelessWidget {
   final String machineId;
-  const products({ required this.machineId}) ;
 
-  @override
-  State<products> createState() => _productsState();
-}
-
-class _productsState extends State<products> {
-
-  List<int> selectedItem = [];
-  List<int> amounts = [];
+  ViewProduct({required this.machineId});
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: FutureBuilder<List<Map<dynamic, dynamic>>?>(
-        future: store().getNewproduct(widget.machineId),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('viewProduct'),
+      ),
+      body: FutureBuilder<List<Map<dynamic, dynamic>>?>(
+        future: store().getNewproduct(machineId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<Map<dynamic, dynamic>>? products = snapshot.data;
@@ -35,12 +31,6 @@ class _productsState extends State<products> {
                   String productsimage = productsData['image'];
                   int productsprice = productsData['price'];
                   // Build your list item here using products[index]
-                  if (amounts.length <= index) {
-                    amounts.add(0);
-                  }
-
-                  // Build your list item here using products[index]
-                  int amount = amounts[index];
                   return Padding(
                     padding: const EdgeInsets.all(10),
                     child: Card(
@@ -85,59 +75,21 @@ class _productsState extends State<products> {
                                     title: Text(productsName,style: TextStyle(fontSize: 25),),
                                     subtitle: Text(productsDetails,style: TextStyle(fontSize: 25 ,color: Colors.grey),),
                                     trailing: IconButton(
-                                      onPressed: () {
-                                        
-                                      },
-                                      iconSize: 40,
-                                      icon: Icon(Icons.add),
-                                      color:  Colors.red,
+                                        onPressed: (){
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => editProduct(machineId: machineId,productID:productsData['id'])),
+                                          );
+                                          print(productsData['id']);
+                                        },
+                                        icon: Icon(Icons.edit,color: Colors.black,)
                                     ),
 
                                   ),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.only(right: 10,top: 10),
-                                  child: Row(
-                                    // mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: 90,
-                                      ),
-                                      IconButton(
-                                          alignment: Alignment.centerRight,
-                                          iconSize: 35,
-                                          onPressed: (){
-                                            setState(() {
-                                              if (amount > 0) {
-                                                amount -= 1;
-                                              }
-                                              amounts[index] = amount as int;
-                                            });
-                                          },
-                                          icon:Icon(Icons.remove_circle_outline
-                                          )
-                                      ),
-                                      Text(amount > 0 ? amount.toString() : '0',
-                                        style: amount>9? TextStyle(fontSize: 30):TextStyle(fontSize: 40),),
-                                      IconButton(
-                                          iconSize: 35,
-                                          onPressed: (){
-                                            setState(() {
-                                              if(amount< productsamount){
-                                                amount += 1;
-                                              }
-                                              amounts[index] = amount as int;
-                                            });
-                                          },
-                                          icon:Icon(Icons.add_circle_outline
-                                          )
-                                      )
-                                    ],
-                                  ),
-                                ),
 
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 10,right: 10,top: 10),
+                                  padding: const EdgeInsets.only(bottom: 10,right: 10,top: 20),
                                   child: Container(
                                     width: 200,
                                     child: Divider(
@@ -168,7 +120,27 @@ class _productsState extends State<products> {
                                     ],
                                   ),
                                 ),
+                                Container(
+                                  width: 200,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Container(
+                                        // width: 150,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 5),
+                                          child: Text("amount",style: TextStyle(fontSize: 25),),
+                                        ),
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          child: Text('${productsamount}',style: TextStyle(fontSize: 25),)
+                                      ),
 
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -196,12 +168,5 @@ class _productsState extends State<products> {
       ),
     );
   }
-  // void toggleIconView(int index) {
-  //   if (selectedItem.contains(index)) {
-  //     selectedItem.remove(index);
-  //   } else {
-  //     selectedItem.add(index);
-  //   }
-  //   setState(() {});
-  // }
 }
+

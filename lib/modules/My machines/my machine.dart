@@ -1,21 +1,50 @@
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../models/productClass.dart';
 import '../../service/product.dart';
+import '../../shared/cnstant/contant.dart';
+import '../My cart/my cart.dart';
 
-class MyMachine extends StatefulWidget {
-  const MyMachine({Key? key}) : super(key: key);
+class MyMachine extends StatelessWidget {
+  final String machineId;
+   MyMachine({ required this.machineId}) ;
 
-  @override
-  State<MyMachine> createState() => _MyMachineState();
-}
-
-class _MyMachineState extends State<MyMachine> {
   final double latitude = 37.7749;
+
   final double longitude = -122.4194;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // dprf.child("machine-products").push().set({
+          //   'name':'canz',
+          //   'details':"cola",
+          //   'qty':4,
+          //   'price':'5',
+          //   'isFavorite':false,
+          // });
+          //     .then((value) => Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (BuildContext context) {
+          //       return MyCart();
+          //     },
+          //   ),
+          // ));
+          // dprf.child('machine-products/0').get().then((DataSnapshot dataSnapshot) {
+          //   print(dataSnapshot.value.toString());
+          // });
+          // dprf.once().then((DatabaseEvent dataSnapshot) {
+          //   print(dataSnapshot.snapshot.value.toString());
+          // });
+        },
+        child: Icon(Icons.done),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
@@ -53,9 +82,17 @@ class _MyMachineState extends State<MyMachine> {
               ]),
             ),
           ),
-          products()
+          products(machineId: machineId),
+          // FloatingActionButton(
+          //
+          //   onPressed:(){},
+          //   child: Icon(Icons.add),
+          //
+          // )
+
         ],
       ),
+
     );
   }
 }
