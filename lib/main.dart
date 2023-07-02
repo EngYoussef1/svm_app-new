@@ -109,13 +109,13 @@ class MyApp extends StatelessWidget {
           ),
 
 
-        ),
+
 
         home: SafeArea(
           child: callingRegisterScreen(),
            // child:userFirstPage()
         )
-
+      ),
     );
   }
 }

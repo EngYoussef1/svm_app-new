@@ -10,8 +10,8 @@ class Assets {
   static const String entryOnBordingEntryStates = 'lib/modules/Entry/OnBordingEntryStates.dart';
   static const String favoritesFavorite = 'lib/modules/favorites/favorite.dart';
   static const String generatedAssets = 'lib/generated/assets.dart';
-  static const String hold outHold out = 'lib/modules/hold out/hold out.dart';
-  static const String hold outHolding details = 'lib/modules/hold out/holding details.dart';
+  static const String holdoutHoldout = 'lib/modules/hold out/hold out.dart';
+  static const String holdoutHoldingdetails = 'lib/modules/hold out/holding details.dart';
   static const String homeHome = 'lib/modules/home/home.dart';
   static const String imagesFacebook = 'images/facebook.png';
   static const String imagesFirstentry = 'images/firstentry.png';
@@ -28,10 +28,10 @@ class Assets {
   static const String libMain = 'lib/main.dart';
   static const String modelsModel = 'lib/models/model.dart';
   static const String modelsProductClass = 'lib/models/productClass.dart';
-  static const String my cartMy cart = 'lib/modules/My cart/my cart.dart';
-  static const String my machinesMy machine = 'lib/modules/My machines/my machine.dart';
-  static const String my ordersMy order = 'lib/modules/My orders/my order.dart';
-  static const String my ordersOrder details = 'lib/modules/My orders/order details.dart';
+  static const String mycartMycart = 'lib/modules/My cart/my cart.dart';
+  static const String mymachinesMymachine = 'lib/modules/My machines/my machine.dart';
+  static const String myordersMyorder = 'lib/modules/My orders/my order.dart';
+  static const String myordersOrderdetails = 'lib/modules/My orders/order details.dart';
   static const String networkNetwork = 'lib/shared/network/network.dart';
   static const String paymentControllerPaymentCubitCubit = 'lib/modules/payment/tryPayment/paymentController/payment_cubit_cubit.dart';
   static const String paymentControllerPaymentCubitState = 'lib/modules/payment/tryPayment/paymentController/payment_cubit_state.dart';
@@ -44,8 +44,8 @@ class Assets {
   static const String serviceImageBanner = 'lib/service/imageBanner.dart';
   static const String serviceMachinesView = 'lib/service/machinesView.dart';
   static const String serviceProduct = 'lib/service/product.dart';
-  static const String sign inSign in = 'lib/modules/sign in/sign in.dart';
-  static const String sign upSign up = 'lib/modules/sign up/sign up.dart';
+  static const String signinSignin = 'lib/modules/sign in/sign in.dart';
+  static const String signupSignup = 'lib/modules/sign up/sign up.dart';
   static const String stylesStyle = 'lib/shared/styles/style.dart';
   static const String tryPaymentCallingPayment = 'lib/modules/payment/tryPayment/callingPayment.dart';
   static const String tryPaymentDefaultButton = 'lib/modules/payment/tryPayment/default_button.dart';
