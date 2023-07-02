@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/productClass.dart';
 import '../../service/store.dart';
+import 'editProduct.dart';
 
 class ViewProduct extends StatelessWidget {
   final String machineId;
@@ -74,7 +75,13 @@ class ViewProduct extends StatelessWidget {
                                     title: Text(productsName,style: TextStyle(fontSize: 25),),
                                     subtitle: Text(productsDetails,style: TextStyle(fontSize: 25 ,color: Colors.grey),),
                                     trailing: IconButton(
-                                        onPressed: (){},
+                                        onPressed: (){
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => editProduct(machineId: machineId,productID:productsData['id'])),
+                                          );
+                                          print(productsData['id']);
+                                        },
                                         icon: Icon(Icons.edit,color: Colors.black,)
                                     ),
 

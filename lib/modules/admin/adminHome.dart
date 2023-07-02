@@ -60,23 +60,24 @@ class adminHome extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          MaterialButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>  editMachine()),
-              );
-            },
-            child: Container(
-                width: 270,
-                height: 67,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  color: Colors.red[700],
-                ),
-                child: Center(child: Text("Edit machine",style: TextStyle(fontSize:30,color: Colors.white )))
-            ),
-          ),
+          //editMachine button
+          // MaterialButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) =>  editMachine()),
+          //     );
+          //   },
+          //   child: Container(
+          //       width: 270,
+          //       height: 67,
+          //       decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.all(Radius.circular(30)),
+          //         color: Colors.red[700],
+          //       ),
+          //       child: Center(child: Text("Edit machine",style: TextStyle(fontSize:30,color: Colors.white )))
+          //   ),
+          // ),
           SizedBox(
             height: 10,
           ),
@@ -102,23 +103,24 @@ class adminHome extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          MaterialButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>  editProduct()),
-              );
-            },
-            child: Container(
-                width: 270,
-                height: 67,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  color: Colors.red[700],
-                ),
-                child: Center(child: Text("Edit product",style: TextStyle(fontSize:30,color: Colors.white )))
-            ),
-          ),
+          //editproduct button
+          // MaterialButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) =>  editProduct()),
+          //     );
+          //   },
+          //   child: Container(
+          //       width: 270,
+          //       height: 67,
+          //       decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.all(Radius.circular(30)),
+          //         color: Colors.red[700],
+          //       ),
+          //       child: Center(child: Text("Edit product",style: TextStyle(fontSize:30,color: Colors.white )))
+          //   ),
+          // ),
           SizedBox(
             height: 10,
           ),

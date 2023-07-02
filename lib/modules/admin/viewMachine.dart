@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:svm_app/modules/admin/viewProduct.dart';
 
 import '../../service/store.dart';
+import 'editMachine.dart';
 
 class ViewMachine extends StatelessWidget {
   final Future<List<Map<dynamic, dynamic>>?> machines = store().getNewMachine();
@@ -100,7 +101,12 @@ class ViewMachine extends StatelessWidget {
                                               style: TextStyle(fontSize: 20),
                                             ),
                                             IconButton(
-                                                onPressed: (){},
+                                                onPressed: (){
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => editMachine(machineId: machineData['id'])),
+                                                  );
+                                                },
                                                 icon: Icon(Icons.edit)
                                             )
                                           ],

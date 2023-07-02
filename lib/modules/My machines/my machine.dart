@@ -7,17 +7,13 @@ import '../../service/product.dart';
 import '../../shared/cnstant/contant.dart';
 import '../My cart/my cart.dart';
 
-class MyMachine extends StatefulWidget {
-  const MyMachine({Key? key}) : super(key: key);
+class MyMachine extends StatelessWidget {
+  final String machineId;
+   MyMachine({ required this.machineId}) ;
 
-  @override
-  State<MyMachine> createState() => _MyMachineState();
-}
-
-class _MyMachineState extends State<MyMachine> {
   final double latitude = 37.7749;
-  final double longitude = -122.4194;
 
+  final double longitude = -122.4194;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +82,7 @@ class _MyMachineState extends State<MyMachine> {
               ]),
             ),
           ),
-          products(),
+          products(machineId: machineId),
           // FloatingActionButton(
           //
           //   onPressed:(){},

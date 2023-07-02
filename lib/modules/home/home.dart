@@ -7,15 +7,11 @@ import '../Drawer/drawer.dart';
 import '../My machines/my machine.dart';
 import '../search/search.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class Home extends StatelessWidget {
+   Home({Key? key}) : super(key: key);
 
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
   var search = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -73,19 +69,7 @@ class _HomeState extends State<Home> {
               SizedBox(
                 height: 20,
               ),
-              InkWell(
-                  onTap: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return MyMachine();
-                        },
-                      ),
-                    );
-                  },
-                  child: machines()
-              ),
+              machines(),
 
             ]
         ),

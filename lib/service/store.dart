@@ -67,9 +67,11 @@ class store {
         .then((value) => print('Product added successfully'))
         .catchError((error) => print('Failed to add product: $error'));
   }
-  Future<List<Map<dynamic, dynamic>>?> getNewproduct(machineId) async {
-    DatabaseReference machinesRef =
-    FirebaseDatabase.instance.ref().child('machine-products').child(machineId);
+  Future<List<Map<String, dynamic>>?> getNewproduct(String machineId) async {
+    DatabaseReference machinesRef = FirebaseDatabase.instance
+        .ref()
+        .child('machine-products')
+        .child(machineId);
 
     try {
       DatabaseEvent event = await machinesRef.once();
@@ -77,17 +79,18 @@ class store {
       Map<dynamic, dynamic>? machinesData =
       snapshot.value as Map<dynamic, dynamic>?;
 
-
       if (machinesData != null) {
-        List<Map<dynamic, dynamic>> machineList = [];
+        List<Map<String, dynamic>> productList = [];
 
-        machinesData.forEach((key, value) {
-          Map<dynamic, dynamic> machineData =
-          value as Map<dynamic, dynamic>;
-          machineList.add(machineData);
+        machinesData.forEach((productId, productData) {
+          if (productData is Map) {
+            Map<String, dynamic> productMap = productData.cast<String, dynamic>();
+            productMap['id'] = productId; // Add the 'id' key to the product data map
+            productList.add(productMap);
+          }
         });
 
-        return machineList;
+        return productList;
       } else {
         print('No products found in the database.');
       }
@@ -97,5 +100,12 @@ class store {
       print('Failed to retrieve data from Firebase: $error');
       return null;
     }
+  }
+
+  void updateMachineValue(machineId,data) {
+    dprf.child('machines').child(machineId!).update(data);
+  }
+  void updateProductValue(machineId,productID,data) {
+    dprf.child('machine-products').child(machineId!).child(productID).update(data);
   }
 }
