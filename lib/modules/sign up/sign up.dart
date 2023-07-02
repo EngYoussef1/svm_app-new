@@ -30,10 +30,7 @@ class _Sign_upState extends State<Sign_up> {
   final _auth = Auth();
   signUp() async {
 
-
   }
-
-
 
   var formKey = GlobalKey<FormState>();
   @override
