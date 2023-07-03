@@ -112,8 +112,8 @@ class MyApp extends StatelessWidget {
 
 
         home: SafeArea(
-          child: callingRegisterScreen(),
-           // child:userFirstPage()
+          // child: callingRegisterScreen(),
+           child:userFirstPage(),
         )
       ),
     );

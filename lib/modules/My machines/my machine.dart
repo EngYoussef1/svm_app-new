@@ -2,6 +2,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:svm_app/service/store.dart';
 import '../../models/productClass.dart';
 import '../../service/product.dart';
 import '../../shared/cnstant/contant.dart';
@@ -20,27 +21,7 @@ class MyMachine extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // dprf.child("machine-products").push().set({
-          //   'name':'canz',
-          //   'details':"cola",
-          //   'qty':4,
-          //   'price':'5',
-          //   'isFavorite':false,
-          // });
-          //     .then((value) => Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (BuildContext context) {
-          //       return MyCart();
-          //     },
-          //   ),
-          // ));
-          // dprf.child('machine-products/0').get().then((DataSnapshot dataSnapshot) {
-          //   print(dataSnapshot.value.toString());
-          // });
-          // dprf.once().then((DatabaseEvent dataSnapshot) {
-          //   print(dataSnapshot.snapshot.value.toString());
-          // });
+         // store().updateMachineValue(machineId, {'isfavorite':false});
         },
         child: Icon(Icons.done),
       ),
@@ -59,29 +40,42 @@ class MyMachine extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            // width: double.infinity,
             height: 225,
-            margin: EdgeInsets.all(15),
+              margin: EdgeInsets.all(15),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black),
-            ),
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(latitude, longitude),
-                zoom: 16.0,
-              ),
-              markers: Set<Marker>.of([
-                Marker(
-                  markerId: MarkerId('myMarker'),
-                  position: LatLng(latitude, longitude),
-                  infoWindow: InfoWindow(
-                    title: 'My Marker',
-                    snippet: 'This is my location',
-                  ),
+              image: DecorationImage(
+                image: AssetImage(
+                  'images/map.png',
                 ),
-              ]),
+                fit: BoxFit.fill,
+              ),
             ),
           ),
+          // Container(
+          //   // width: double.infinity,
+          //   height: 225,
+          //   margin: EdgeInsets.all(15),
+          //   decoration: BoxDecoration(
+          //     border: Border.all(color: Colors.black),
+          //   ),
+          //   child: GoogleMap(
+          //     initialCameraPosition: CameraPosition(
+          //       target: LatLng(latitude, longitude),
+          //       zoom: 16.0,
+          //     ),
+          //     markers: Set<Marker>.of([
+          //       Marker(
+          //         markerId: MarkerId('myMarker'),
+          //         position: LatLng(latitude, longitude),
+          //         infoWindow: InfoWindow(
+          //           title: 'My Marker',
+          //           snippet: 'This is my location',
+          //         ),
+          //       ),
+          //     ]),
+          //   ),
+          // ),
           products(machineId: machineId),
           // FloatingActionButton(
           //

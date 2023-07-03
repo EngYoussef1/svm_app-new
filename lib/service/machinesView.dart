@@ -7,9 +7,17 @@ import 'package:svm_app/shared/cnstant/contant.dart';
 import '../modules/My machines/my machine.dart';
 
 
-class machines extends StatelessWidget {
+class machines extends StatefulWidget {
    machines({Key? key}) : super(key: key);
+
+  @override
+  State<machines> createState() => _machinesState();
+}
+
+class _machinesState extends State<machines> {
    final Future<List<Map<dynamic, dynamic>>?> machine = store().getNewMachine();
+
+   List<int> selectedItem = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +49,14 @@ class machines extends StatelessWidget {
                 String machineName = machineData['name'];
                 String machineDetails = machineData['details'];
                 String machineIds =machineData['id'] ;
+                bool isfavorite =machineData['isfavorite'];
                 // Retrieve other properties as needed
 
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyMachine(machineId: machineData['id'])),
+                      MaterialPageRoute(builder: (context) => MyMachine(machineId: machineIds)),
                     );
                     print(machineData['id']);
                   },
@@ -99,7 +108,22 @@ class machines extends StatelessWidget {
                                             machineName,
                                             style: TextStyle(fontSize: 20),
                                           ),
-
+                                          IconButton(
+                                            onPressed: () {
+                                              if (selectedItem.contains(index)) {
+                                                selectedItem.remove(index);
+                                                store().updateMachineValue(machineIds, {'isfavorite':false});
+                                              } else {
+                                                selectedItem.add(index);
+                                                store().updateMachineValue(machineIds, {'isfavorite':true});
+                                              }
+                                              setState(() {});
+                                            },
+                                            icon: Icon(selectedItem.contains(index)||isfavorite == true
+                                                ? Icons.favorite
+                                                : Icons.favorite_border),
+                                            color: selectedItem.contains(index)||isfavorite == true  ? Colors.red : Colors.red,
+                                          ),
                                         ],
                                       ),
                                       Text(
@@ -128,4 +152,8 @@ class machines extends StatelessWidget {
     );
 
   }
+
+   void toggleIconView(int index) {
+
+   }
 }

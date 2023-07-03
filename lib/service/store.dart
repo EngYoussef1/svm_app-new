@@ -63,7 +63,7 @@ class store {
         .child('machine-products')
         .child(userID!)
     .push()
-        .set({'name': Name,'position':position, 'price': price,'details':details,'image':image,'amount':amount})
+        .set({'name': Name,'position':position, 'price': price,'details':details,'image':image,'amount':amount,'isfavorite':false})
         .then((value) => print('Product added successfully'))
         .catchError((error) => print('Failed to add product: $error'));
   }
@@ -107,5 +107,50 @@ class store {
   }
   void updateProductValue(machineId,productID,data) {
     dprf.child('machine-products').child(machineId!).child(productID).update(data);
+  }
+
+
+  Future<List<Map<String, dynamic>>?> getCartInfo(machineId,userId) async {
+
+    DatabaseReference cartRef = FirebaseDatabase.instance.ref().child('cart').child(userId).child(machineId);
+
+
+
+
+
+      try {
+        DatabaseEvent event = await cartRef.once();
+        DataSnapshot snapshot = event.snapshot;
+        dynamic cartData = snapshot.value;
+
+        if (cartData != null && cartData is Map) {
+          List<Map<String, dynamic>> cartItemList = [];
+
+          cartData.forEach((key, value) {
+            if (value is Map) {
+              Map<String, dynamic> cartItemData = value.cast<String, dynamic>();
+              cartItemData['id'] = key; // add the product id to the cart item data map
+              cartItemList.add(cartItemData);
+            }
+          });
+
+          return cartItemList;
+        } else {
+          print('No items found in the cart.');
+        }
+      } catch (error) {
+        print('Failed to retrieve cart data from Firebase: $error');
+      }
+
+
+    return null;
+  }
+  Future<void> removeFromCart(String productId,machineId) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (userId != null) {
+      DatabaseReference cartRef = FirebaseDatabase.instance.ref().child('cart').child(userId).child(machineId);
+      await cartRef.child(productId).remove();
+    }
   }
 }

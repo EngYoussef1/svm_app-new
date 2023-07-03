@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../service/store.dart';
 import '../Drawer/drawer.dart';
+import '../My machines/my machine.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
 var productName = 'Chipsy';
@@ -15,7 +17,7 @@ class FavouritePage extends StatefulWidget {
 }
 
 class FavouritePageState extends State<FavouritePage> {
-
+  final Future<List<Map<dynamic, dynamic>>?> machine = store().getNewMachine();
   List products=[
     'Chipsy',
     'fayrouz',
@@ -51,189 +53,130 @@ class FavouritePageState extends State<FavouritePage> {
             // elevation: 0.0,
             toolbarHeight: 60.0,
             // titleSpacing: 20.0,
-            bottom: TabBar(
-              padding: EdgeInsets.only(left: 35.0, right: 35.0),
-              //padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 90.0),
-              tabs: <Widget>[
-                Tab(
-                  child: Text(
-                    'Products',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 27,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    'Machines',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 27,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
+
           ),
           drawer: Drawer(
             child: drawerview(),
           ),
-          body: TabBarView(
-            children: <Widget>[
-              ListView.builder(
-                  itemCount:products.length ,
-                  itemBuilder: (context,index){
-                    return Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Card(
-                        elevation: 10,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Container(
-                          height: 140,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.all(Radius.circular(30))
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                //product image
-                                child: Container(
-                                  width: 110,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(30)),
+          body: FutureBuilder<List<Map<dynamic, dynamic>>?>(
+            future: machine,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Failed to fetch machine data'));
+              } else if (snapshot.hasData) {
+                List<Map<dynamic, dynamic>> machineList = snapshot.data!;
+                // Filter machineList to get only the items with isfavorite = true
+                List<Map<dynamic, dynamic>> favoriteMachineList = machineList.where((machineData) => machineData['isfavorite'] == true).toList();
 
-                                    // border: Border.all(color: Colors.black),
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                        'images/firstentry.png',
+                if (favoriteMachineList.isEmpty) {
+                  return Center(child: Text('No favorite machines found'));
+                }
+
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  child: GridView.builder(
+                    itemCount: favoriteMachineList.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 400 / (1850 / 4),
+                    ),
+                    itemBuilder: (context, index) {
+                      // Access individual machine data using index
+                      Map<dynamic, dynamic> machineData = favoriteMachineList[index];
+                      String machineName = machineData['name'];
+                      String machineDetails = machineData['details'];
+                      String machineIds = machineData['id'];
+
+                      // Retrieve other properties as needed
+
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyMachine(machineId: machineIds)),
+                          );
+                          print(machineData['id']);
+                        },
+                        child: Card(
+                          elevation: 10,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Container(
+                            height: 400,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                              borderRadius: BorderRadius.all(Radius.circular(30)),
+                            ),
+                            child: SizedBox(
+                              height: 300,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // machines image
+                                  Container(
+                                    width: double.infinity,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30),
                                       ),
-                                      fit: BoxFit.cover,
+                                      border: Border.all(color: Colors.black),
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          'images/firstentry.png',
+                                        ),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  //name , close icon
-                                  Container(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Row(
-
+                                  // listtile
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: Column(
                                       children: [
-                                        Container(
-                                          width: 180,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 20,top:10),
-                                            child: Text('${products[index]}',style: TextStyle(fontSize: 25),),
-                                          ),
-                                        ),
-
-                                        IconButton(
-                                            onPressed: (){},
-                                            icon:Icon(
-                                              Icons.close,
-                                              size: 30,
-                                            )
+                                        Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  machineName,
+                                                  style: TextStyle(fontSize: 20),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              machineDetails,
+                                              style: TextStyle(fontSize: 17, color: Colors.grey),
+                                            ),
+                                          ],
                                         )
                                       ],
                                     ),
                                   ),
-                                 Container(
-                                    padding: EdgeInsets.only(left: 20),
-                                   child: Text("descreption",style: TextStyle(fontSize:25,color: Colors.grey ),),
-                                 ),
+                                  // rating icons
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }
-              ),
-              ListView.builder(
-                  itemCount:machines.length ,
-                  itemBuilder: (context,index){
-                    return Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Card(
-                        elevation: 10,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Container(
-                          height: 140,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.all(Radius.circular(30))
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                //product image
-                                child: Container(
-                                  width: 110,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(30)),
-
-                                    // border: Border.all(color: Colors.black),
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                        'images/firstentry.png',
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  //name , close icon
-                                  Container(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Row(
-
-                                      children: [
-                                        Container(
-                                          width: 180,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 20,top:10),
-                                            child: Text('${machines[index]}',style: TextStyle(fontSize: 25),),
-                                          ),
-                                        ),
-
-                                        IconButton(
-                                            onPressed: (){},
-                                            icon:Icon(
-                                              Icons.close,
-                                              size: 30,
-                                            )
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(left: 20),
-                                    child: Text("descreption",style: TextStyle(fontSize:25,color: Colors.grey ),),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-              ),
-            ],
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return Center(child: Text('No machines found'));
+              }
+            },
           ),
         ));
   }

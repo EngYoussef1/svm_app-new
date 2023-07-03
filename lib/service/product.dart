@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:svm_app/service/store.dart';
 import 'package:svm_app/shared/cnstant/contant.dart';
@@ -16,6 +17,7 @@ class _productsState extends State<products> {
 
   List<int> selectedItem = [];
   List<int> amounts = [];
+  
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -34,6 +36,7 @@ class _productsState extends State<products> {
                   int productsamount = productsData['amount'];
                   String productsimage = productsData['image'];
                   int productsprice = productsData['price'];
+                  String productID=productsData['id'];
                   // Build your list item here using products[index]
                   if (amounts.length <= index) {
                     amounts.add(0);
@@ -86,7 +89,15 @@ class _productsState extends State<products> {
                                     subtitle: Text(productsDetails,style: TextStyle(fontSize: 25 ,color: Colors.grey),),
                                     trailing: IconButton(
                                       onPressed: () {
-                                        
+                                        String? Id =FirebaseAuth.instance.currentUser?.uid;
+                                        dprf.child('cart').child(Id!).child(widget.machineId).child(productsData['id']).set({
+                                          'name':productsName,
+                                          'details':productsDetails,
+                                          'price':productsprice,
+                                          'image':productsimage,
+                                          'amount':amounts[index],
+                                        });
+
                                       },
                                       iconSize: 40,
                                       icon: Icon(Icons.add),

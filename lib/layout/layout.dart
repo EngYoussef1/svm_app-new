@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 
+import '../modules/My cart/cartMachine.dart';
 import '../modules/My cart/my cart.dart';
 import '../modules/favorites/favorite.dart';
 import '../modules/home/home.dart';
@@ -17,7 +18,7 @@ class _NavigationBottomState extends State<NavigationBottom> {
   List<Widget> screens=[
     FavouritePage(),
     Home(),
-    MyCart(),
+    cartMachine(),
 
   ];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -53,7 +54,7 @@ class _NavigationBottomState extends State<NavigationBottom> {
             ),
             BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_cart),
-                label: 'my cart'
+                label: 'cart Machine'
             ),
           ],
 

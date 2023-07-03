@@ -1,24 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../models/productClass.dart';
+
+import '../../service/store.dart';
+import '../../shared/cnstant/contant.dart';
 import '../../shared/componant/counter_operations.dart';
 
 import '../Drawer/drawer.dart';
 import '../hold out/hold out.dart';
 
 class MyCart extends StatefulWidget {
-  const MyCart({Key? key}) : super(key: key);
+  final String machineId;
+  const MyCart({ required this.machineId}) ;
 
   @override
   State<MyCart> createState() => _MyCartState();
 }
 
 class _MyCartState extends State<MyCart> {
-
-  List<CardItem> products = [
-    CardItem(name: "Chipsy" , details: "chease"),
-    CardItem(name: "Domty", details: "mango" ),
-    CardItem(name: "Tiger" , details: "chease"),
-  ];
+  String? Id =FirebaseAuth.instance.currentUser?.uid;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,141 +28,163 @@ class _MyCartState extends State<MyCart> {
 
         title: Text('My cart'),
         centerTitle: true,
+
       ),
-      drawer: Drawer(
-        child: drawerview(),
-      ),
+
       body: Stack(
         children: [
-          ListView.builder(
-              itemCount:products.length ,
-              itemBuilder: (context,index){
-                return Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Card(
-                    elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Container(
-                      height: 180,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
-                          borderRadius: BorderRadius.all(Radius.circular(30))
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10),
-                            //product image
+          FutureBuilder<List<Map<dynamic, dynamic>>?>(
+            future: store().getCartInfo(widget.machineId,Id),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<Map<dynamic, dynamic>>? products = snapshot.data;
+                if (products != null) {
+                  return  ListView.builder(
+                      itemCount:products.length ,
+                      itemBuilder: (context,index){
+                        Map<dynamic, dynamic> productsData = products[index];
+                        String productsName = productsData['name'];
+                        String productsDetails = productsData['details'];
+                        int productsamount = productsData['amount'];
+                        String productsimage = productsData['image'];
+                        int productsprice = productsData['price'];
+                        String productID =productsData['id'];
+                        return Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Card(
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                             child: Container(
-                              width: 110,
+                              height: 200,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(30)),
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.all(Radius.circular(30))
+                              ),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    //product image
+                                    child: Container(
+                                      width: 110,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(30)),
 
-                                // border: Border.all(color: Colors.black),
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                    'images/firstentry.png',
+                                        // border: Border.all(color: Colors.black),
+                                        image: DecorationImage(
+                                          image: NetworkImage(productsimage),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  fit: BoxFit.cover,
-                                ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      //name , close icon
+                                      Container(
+                                        margin: EdgeInsets.only(top: 15),
+                                        height: 55,
+                                        width: 200,
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 1),
+                                          title: Text(productsName,style: TextStyle(fontSize: 25),),
+                                          subtitle: Text(productsDetails,style: TextStyle(fontSize: 25 ,color: Colors.grey),),
+                                          trailing: IconButton(
+                                              onPressed: (){
+                                                setState(() {
+                                                  store().removeFromCart(productID,widget.machineId);
+                                                });
+
+                                              },
+                                              icon:Icon(
+                                                Icons.close,
+                                                size: 30,
+                                              )
+                                          )
+
+                                        ),
+                                      ),
+
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 10,right: 10,top: 20),
+                                        child: Container(
+                                          width: 200,
+                                          child: Divider(
+                                            height: 3,
+                                            thickness: 2,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 200,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Container(
+                                              // width: 150,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(left: 5),
+                                                child: Text("amount",style: TextStyle(fontSize: 25),),
+                                              ),
+                                            ),
+                                            Container(
+                                                margin: EdgeInsets.only(right: 10),
+                                                child: Text('${productsamount}',style: TextStyle(fontSize: 25),)
+                                            ),
+
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 200,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Container(
+                                              // width: 150,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(left: 5),
+                                                child: Text("total",style: TextStyle(fontSize: 25),),
+                                              ),
+                                            ),
+                                            Container(
+                                                margin: EdgeInsets.only(right: 10),
+                                                child: Text('${productsprice}',style: TextStyle(fontSize: 25),)
+                                            ),
+
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              //name , close icon
-                              Container(
-                                height: 40,
-                                child: Row(
-
-                                  children: [
-                                    Container(
-                                      width: 180,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 20,top:10),
-                                        child: Text(products[index].name,style: TextStyle(fontSize: 25),),
-                                      ),
-                                    ),
-
-                                    IconButton(
-                                        onPressed: (){},
-                                        icon:Icon(
-                                          Icons.close,
-                                          size: 30,
-                                        )
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                // color: Colors.red,
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 90,
-                                    ),
-                                    IconButton(
-                                        iconSize: 40,
-                                        onPressed: (){
-                                          setState(() {
-                                            products[index].amount -= 1;
-                                          });
-                                        },
-                                        icon:Icon(Icons.remove_circle_outline
-                                        )
-                                    ),
-                                    Text(products[index].amount > 0 ? products[index].amount.toString() : '0',
-                                      style: products[index].amount>9? TextStyle(fontSize: 30):TextStyle(fontSize: 40),),
-                                    IconButton(
-                                        iconSize: 40,
-                                        onPressed: (){
-                                          setState(() {
-                                            products[index].amount += 1;
-                                          });
-                                        },
-                                        icon:Icon(Icons.add_circle_outline
-                                        )
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5,bottom: 10),
-                                child: Container(
-                                  width: 200,
-                                  child: Divider(
-                                    height: 3,
-                                    thickness: 2,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    width: 180,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 20,top: 5),
-                                      child: Text("total",style: TextStyle(fontSize: 25),),
-                                    ),
-                                  ),
-                                  Text('${products[index].price}',style: TextStyle(fontSize: 25),),
-
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        );
+                      }
+                  );
+                } else {
+                  return Center(
+                    child: Text('No products available'),
+                  );
+                }
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error loading products'),
+                );
+              } else {
+                return Center(
+                  child: Text('cart is empty'),
                 );
               }
+            },
           ),
           Container(
             alignment: Alignment.bottomCenter,
