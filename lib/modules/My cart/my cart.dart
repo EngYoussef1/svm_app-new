@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import '../../models/productClass.dart';
 
 import '../../service/store.dart';
@@ -8,6 +9,7 @@ import '../../shared/componant/counter_operations.dart';
 
 import '../Drawer/drawer.dart';
 import '../hold out/hold out.dart';
+import '../payment/payment.dart';
 
 class MyCart extends StatefulWidget {
   final String machineId;
@@ -19,6 +21,7 @@ class MyCart extends StatefulWidget {
 
 class _MyCartState extends State<MyCart> {
   String? Id =FirebaseAuth.instance.currentUser?.uid;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,7 +158,7 @@ class _MyCartState extends State<MyCart> {
                                             ),
                                             Container(
                                                 margin: EdgeInsets.only(right: 10),
-                                                child: Text('${productsprice}',style: TextStyle(fontSize: 25),)
+                                                child: Text('${productsprice*productsamount}',style: TextStyle(fontSize: 25),)
                                             ),
 
                                           ],
@@ -223,7 +226,31 @@ class _MyCartState extends State<MyCart> {
                       )
                   ),
                 ),
-                MaterialButton(onPressed: (){},
+                MaterialButton(onPressed: (){
+                  try{
+                    FlutterBarcodeScanner.scanBarcode('#2A99CF', 'cancel', true, ScanMode.QR).then((value){
+                      if(value==widget.machineId){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return Payment( machineId: widget.machineId,);
+                            },
+                          ),
+                        );
+                      }else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('machine qr is wrong')),
+                        );
+                      }
+                    });
+                  }catch(e){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('some thing want wrong')),
+                    );
+                     print('unable to read this');
+                  }
+                },
                   child: Container(
                       width: 160,
                       height: 67,

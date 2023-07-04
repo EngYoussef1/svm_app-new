@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../layout/layout.dart';
 import '../../service/imageBanner.dart';
@@ -43,15 +44,37 @@ class Home extends StatelessWidget {
           },
         ),
         actions: [
-          Container(
-            // margin: EdgeInsets.only(bottom: 10,right: 5),
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => const SearchPage()));
-              },
-              icon:  Icon(Icons.search,),
-            ),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => const SearchPage()));
+                },
+                icon:  Icon(Icons.search,),
+              ),
+              IconButton(
+                onPressed: () {
+                  try{
+                    FlutterBarcodeScanner.scanBarcode('#2A99CF', 'cancel', true, ScanMode.QR).then((value){
+                      if(value==null){
+
+                      }else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('machine qr is wrong')),
+                        );
+                      }
+                    });
+                  }catch(e){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('some thing want wrong')),
+                    );
+                    print('unable to read this');
+                  }
+                },
+                icon:  Icon(Icons.qr_code,),
+              ),
+            ],
           )
         ],
 

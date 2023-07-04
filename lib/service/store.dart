@@ -113,11 +113,6 @@ class store {
   Future<List<Map<String, dynamic>>?> getCartInfo(machineId,userId) async {
 
     DatabaseReference cartRef = FirebaseDatabase.instance.ref().child('cart').child(userId).child(machineId);
-
-
-
-
-
       try {
         DatabaseEvent event = await cartRef.once();
         DataSnapshot snapshot = event.snapshot;
@@ -153,4 +148,104 @@ class store {
       await cartRef.child(productId).remove();
     }
   }
+  Future<void> removeCart(machineId) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (userId != null) {
+      DatabaseReference cartRef = FirebaseDatabase.instance.ref().child('cart').child(userId).child(machineId);
+      await cartRef.remove();
+    }
+  }
+  Future<List<Map<String, dynamic>>?> fetchUserData(id) async{
+    DatabaseReference databaseReference =
+    dprf.child('user').child(id).child('cardInfo');
+
+    try {
+      DatabaseEvent event = await databaseReference.once();
+      DataSnapshot snapshot = event.snapshot;
+      dynamic userData = snapshot.value;
+
+      if (userData != null && userData is Map) {
+        List<Map<String, dynamic>> userItemList = [];
+
+        userData.forEach((key, value) {
+          if (value is Map) {
+            Map<String, dynamic> userItemData = value.cast<String, dynamic>();
+            userItemList.add(userItemData);
+          }
+        });
+
+        return userItemList;
+      } else {
+        print('No items found in the cart.');
+      }
+    } catch (error) {
+      print('Failed to retrieve cart data from Firebase: $error');
+    }
+
+
+    return null;
+  }
+  Future<List<Map<String, dynamic>>?> getUsreOrder(machineId,userId) async {
+
+    DatabaseReference ordersRef = FirebaseDatabase.instance.ref().child('user-orders').child(userId).child(machineId);
+
+    try {
+      DatabaseEvent event = await ordersRef.once();
+      DataSnapshot snapshot = event.snapshot;
+      dynamic ordersData = snapshot.value;
+
+      if (ordersData != null && ordersData is Map) {
+        List<Map<String, dynamic>> ordersList = [];
+
+        ordersData.forEach((productId, orderData) {
+          if (orderData is Map) {
+            Map<String, dynamic> orderItemData = orderData.cast<String, dynamic>();
+            orderItemData['id'] = productId; // add the product id to the order data map
+            ordersList.add(orderItemData);
+          }
+        });
+
+        return ordersList;
+      } else {
+        print('No orders found for the user and machine.');
+      }
+    } catch (error) {
+      print('Failed to retrieve orders data from Firebase: $error');
+    }
+
+    return null;
+  }
+  Future<List<Map<String, dynamic>>?> getUsreProductOrder(machineId,userId,productID) async {
+
+    DatabaseReference ordersRef = FirebaseDatabase.instance.ref().child('user-orders')
+        .child(userId).child(machineId).child(productID);
+
+    try {
+      DatabaseEvent event = await ordersRef.once();
+      DataSnapshot snapshot = event.snapshot;
+      dynamic ordersData = snapshot.value;
+
+      if (ordersData != null && ordersData is Map) {
+        List<Map<String, dynamic>> ordersList = [];
+
+        ordersData.forEach((productId, orderData) {
+          if (orderData is Map) {
+            Map<String, dynamic> orderItemData = orderData.cast<String, dynamic>();
+            orderItemData['id'] = productId; // add the product id to the order data map
+            ordersList.add(orderItemData);
+          }
+        });
+
+        return ordersList;
+      } else {
+        print('No orders found for the user and machine.');
+      }
+    } catch (error) {
+      print('Failed to retrieve orders data from Firebase: $error');
+    }
+
+    return null;
+  }
+
 }

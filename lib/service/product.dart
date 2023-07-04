@@ -37,6 +37,7 @@ class _productsState extends State<products> {
                   String productsimage = productsData['image'];
                   int productsprice = productsData['price'];
                   String productID=productsData['id'];
+                  int productsPosition = productsData['position'];
                   // Build your list item here using products[index]
                   if (amounts.length <= index) {
                     amounts.add(0);
@@ -90,13 +91,29 @@ class _productsState extends State<products> {
                                     trailing: IconButton(
                                       onPressed: () {
                                         String? Id =FirebaseAuth.instance.currentUser?.uid;
-                                        dprf.child('cart').child(Id!).child(widget.machineId).child(productsData['id']).set({
-                                          'name':productsName,
-                                          'details':productsDetails,
-                                          'price':productsprice,
-                                          'image':productsimage,
-                                          'amount':amounts[index],
-                                        });
+                                        print(productID);
+                                       try{
+                                         dprf.child('cart').child(Id!).child(widget.machineId).child(productID).set(
+                                           {
+                                             'productID':productID,
+                                               'name':productsName,
+                                               'details':productsDetails,
+                                               'price':productsprice,
+                                               'image':productsimage,
+                                               'amount':amounts[index],
+                                               'position':productsPosition,
+                                           });
+                                       }catch(e){
+                                         print('Error: $e');
+                                       }
+                                        // dprf.child('cart').child(Id!).child(widget.machineId).child(productID).set({
+                                        //   'name':productsName,
+                                        //   'details':productsDetails,
+                                        //   'price':productsprice,
+                                        //   'image':productsimage,
+                                        //   'amount':amounts[index],
+                                        //   'position':productsPosition,
+                                        // });
 
                                       },
                                       iconSize: 40,
