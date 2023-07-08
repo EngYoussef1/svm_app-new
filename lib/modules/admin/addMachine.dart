@@ -21,9 +21,9 @@ class _addMachineState extends State<addMachine> {
   final GlobalKey<FormState> machineAuth = GlobalKey<FormState>();
 
   // var name = TextEditingController();
-  String _name='',_image='',_details='',_email='',_passwoed='';
+  String _name='',_image='',_details='',_email='',_passwoed='',_location='';
 
-  double _longitude=0,_latitude=0;
+
 
   int _slots=0;
 
@@ -225,47 +225,28 @@ class _addMachineState extends State<addMachine> {
                     ),
                     TextFormField(
 
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'latitude',
+                        labelText: 'location',
                         labelStyle: TextStyle(fontSize: 30),
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'latitude must not be empty';
+                          return 'location must not be empty';
                         }
 
                         return null;
                       },
                       onChanged: (value) {
                         print(value);
-                        _latitude=double.parse(value!) ?? 0;
+                        _location=value;
                       },
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
 
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'longitude',
-                        labelStyle: TextStyle(fontSize: 30),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'longitude must not be empty';
-                        }
-
-                        return null;
-                      },
-                      onChanged: (value) {
-                        print(value);
-                        _longitude=double.parse(value!) ?? 0;
-                      },
-                    ),
                     SizedBox(
                       height: 20,
                     ),
@@ -295,7 +276,7 @@ class _addMachineState extends State<addMachine> {
                         if (_globalKey.currentState!.validate()) {
                           _globalKey.currentState!.save();
                           final user = await _auth.getUser();
-                          _store.addMachine( user ,_name,_image,_latitude,_longitude,_slots,_details);
+                          _store.addMachine( user ,_name,_image,_location,_slots,_details);
                         }
                       },
                       child: Container(

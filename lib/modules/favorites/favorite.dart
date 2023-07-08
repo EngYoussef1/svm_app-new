@@ -17,20 +17,8 @@ class FavouritePage extends StatefulWidget {
 }
 
 class FavouritePageState extends State<FavouritePage> {
-  final Future<List<Map<dynamic, dynamic>>?> machine = store().getNewMachine();
-  List products=[
-    'Chipsy',
-    'fayrouz',
-    'Cocacola',
-    'Cocacola',
-    'fayrouz',
-  ];
-  final List machines=[
-    'agezy',
-    'segar',
-    'albahr',
-    'main',
-  ];
+
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -59,7 +47,7 @@ class FavouritePageState extends State<FavouritePage> {
             child: drawerview(),
           ),
           body: FutureBuilder<List<Map<dynamic, dynamic>>?>(
-            future: machine,
+            future: store().getUserFavorite(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -67,17 +55,17 @@ class FavouritePageState extends State<FavouritePage> {
                 return Center(child: Text('Failed to fetch machine data'));
               } else if (snapshot.hasData) {
                 List<Map<dynamic, dynamic>> machineList = snapshot.data!;
-                // Filter machineList to get only the items with isfavorite = true
-                List<Map<dynamic, dynamic>> favoriteMachineList = machineList.where((machineData) => machineData['isfavorite'] == true).toList();
-
-                if (favoriteMachineList.isEmpty) {
-                  return Center(child: Text('No favorite machines found'));
-                }
+                // // Filter machineList to get only the items with isfavorite = true
+                // List<Map<dynamic, dynamic>> favoriteMachineList = machineList.where((machineData) => machineData['isfavorite'] == true).toList();
+                //
+                // if (favoriteMachineList.isEmpty) {
+                //   return Center(child: Text('No favorite machines found'));
+                // }
 
                 return Container(
                   margin: EdgeInsets.symmetric(horizontal: 15),
                   child: GridView.builder(
-                    itemCount: favoriteMachineList.length,
+                    itemCount: machineList.length,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
@@ -89,10 +77,12 @@ class FavouritePageState extends State<FavouritePage> {
                     ),
                     itemBuilder: (context, index) {
                       // Access individual machine data using index
-                      Map<dynamic, dynamic> machineData = favoriteMachineList[index];
+                      Map<dynamic, dynamic> machineData = machineList[index];
                       String machineName = machineData['name'];
                       String machineDetails = machineData['details'];
-                      String machineIds = machineData['id'];
+                      String machineimage =machineData['image'] ;
+                      String machinelocation =machineData['location'] ;
+                      String machineId = machineData['id'];
 
                       // Retrieve other properties as needed
 
@@ -100,9 +90,9 @@ class FavouritePageState extends State<FavouritePage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => MyMachine(machineId: machineIds)),
+                            MaterialPageRoute(builder: (context) => MyMachine(machineId: machineId,location:machinelocation)),
                           );
-                          print(machineData['id']);
+
                         },
                         child: Card(
                           elevation: 10,
@@ -176,7 +166,7 @@ class FavouritePageState extends State<FavouritePage> {
               } else {
                 return Center(child: Text('No machines found'));
               }
-            },
+            }
           ),
         ));
   }

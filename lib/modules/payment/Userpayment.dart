@@ -3,21 +3,22 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:svm_app/service/product.dart';
 
 import '../../layout/layout.dart';
 import '../../service/store.dart';
 import '../../shared/cnstant/contant.dart';
 import '../My orders/my order.dart';
 
-class Payment extends StatefulWidget {
+class UserPayment extends StatefulWidget {
   final String machineId;
-  Payment({required this.machineId});
+  UserPayment({required this.machineId});
 
   @override
-  State<Payment> createState() => _PaymentState();
+  State<UserPayment> createState() => _userPaymentState();
 }
 
-class _PaymentState extends State<Payment> {
+class _userPaymentState extends State<UserPayment> {
   var _character;
   var formKey = GlobalKey<FormState>();
   // var CardName = TextEditingController();
@@ -27,7 +28,6 @@ class _PaymentState extends State<Payment> {
   String? Id = FirebaseAuth.instance.currentUser?.uid;
   String CardName = '', EpiringOn = '';
   int ccv = 0, CardNamber = 0;
-
 
   @override
   Widget build(BuildContext context) {
@@ -338,28 +338,39 @@ class _PaymentState extends State<Payment> {
               ),
               Container(
                 alignment: Alignment.bottomCenter,
-                child:FutureBuilder<List<Map<dynamic, dynamic>>?>(
-                  future: store().getCartInfo(widget.machineId,Id),
+                child: FutureBuilder<List<Map<dynamic, dynamic>>?>(
+                  future: store().getCartInfo(widget.machineId, Id),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       List<Map<dynamic, dynamic>>? products = snapshot.data;
+                      String productID = '';
+                      String productName = '';
+                      String productsDetails = '';
+                      int productsprice = 0;
+                      String productsimage = '';
+                      int productsamount = 0;
+                      int productsPosition = 0;
+
                       if (products != null) {
-                        return   MaterialButton(
+                        for (Map<dynamic, dynamic> product in products) {
+                          productName = product['name'];
+                          productsDetails = product['details'];
+                          productsamount = product['amount'];
+                          productsimage = product['image'];
+                          productsprice = product['price'];
+                          productID = product['id'];
+                          productsPosition = product['position'];
+
+                          // Do something with the product data here...
+                        }
+
+                        return MaterialButton(
                           onPressed: () async {
                             List<Map<String, dynamic>>? userData =
                             await store().fetchUserData(Id);
                             print(userData);
                             if (formKey.currentState!.validate()) {
                               if (userData == null) {
-                                for (Map<dynamic, dynamic> product in products) {
-                                  String productsName = product['name'];
-                                  String productsDetails = product['details'];
-                                  int productsamount = product['amount'];
-                                  String productsimage = product['image'];
-                                  int productsprice = product['price'];
-                                  String productID = product['id'];
-
-                                }
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -370,24 +381,24 @@ class _PaymentState extends State<Payment> {
                                           child: Text('No'),
                                           onPressed: () {
                                             try {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
+                                              ScaffoldMessenger.of(context).showSnackBar(
                                                 const SnackBar(
-                                                    content:
-                                                    Text('Successfully payment')),
+                                                    content: Text('Successfully payment')
+                                                ),
                                               );
 
-                                              Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) => const NavigationBottom()),
-                                                      (Route<dynamic> route) => false);
+                                              // Navigator.pushAndRemoveUntil(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //         builder: (context) =>
+                                              //             const NavigationBottom()),
+                                              //     (Route<dynamic> route) =>
+                                              //         false);
                                             } catch (e) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
+                                              ScaffoldMessenger.of(context).showSnackBar(
                                                 const SnackBar(
-                                                    content:
-                                                    Text('Something went wrong')),
+                                                    content: Text('Something went wrong')
+                                                ),
                                               );
                                               Navigator.of(context).pop();
                                             }
@@ -396,40 +407,7 @@ class _PaymentState extends State<Payment> {
                                         TextButton(
                                           child: Text('Yes'),
                                           onPressed: () {
-                                            try {
-                                              String? userId = FirebaseAuth
-                                                  .instance.currentUser?.uid;
-                                              DatabaseReference userRef =
-                                              dprf.child('user').child(userId!);
-                                              userRef.update({
-                                                'cardInfo': {
-                                                  'CardName': CardName,
-                                                  'CardNamber': CardNamber,
-                                                  'EpiringOn': EpiringOn,
-                                                  'ccv': ccv,
-                                                  'cardtype': _character,
-                                                }
-                                              });
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content:
-                                                    Text('Successfully payment')),
-                                              );
-                                              Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) => const NavigationBottom()),
-                                                      (Route<dynamic> route) => false);
-                                            } catch (e) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content:
-                                                    Text('Something went wrong')),
-                                              );
-                                              Navigator.of(context).pop();
-                                            }
+                                            saveCartInfo();
                                           },
                                         ),
                                       ],
@@ -438,81 +416,39 @@ class _PaymentState extends State<Payment> {
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Successfully payment')),
+                                  const SnackBar(
+                                      content: Text('Successfully payment')
+                                  ),
                                 );
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const NavigationBottom()),
-                                        (Route<dynamic> route) => false);
+                                // Navigator.pushAndRemoveUntil(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             const NavigationBottom()),
+                                //     (Route<dynamic> route) => false);
                               }
+                              createMachineOrder(products);
+                              createUserOrder(products);
 
-                              try {
-                                String? userId = FirebaseAuth.instance.currentUser?.uid;
-                                DatabaseReference cartRef = dprf
-                                    .child('cart')
-                                    .child(userId!)
-                                    .child(widget.machineId);
-                                DatabaseReference ordersRef =
-                                dprf.child('user-orders')
-                                .child(userId!)
-                                    .child(widget.machineId);
-
-                                cartRef.once().then((DatabaseEvent event) {
-                                  DataSnapshot snapshot = event.snapshot;
-                                  Map<dynamic, dynamic>? cartData =
-                                  snapshot.value as Map<dynamic, dynamic>?;
-
-                                  if (cartData != null) {
-                                    cartData.forEach((key, value) {
-                                      // Push product data to machine-orders
-                                      DatabaseReference newOrderRef = ordersRef
-
-                                          .push();
-                                      print(value);
-                                      var unixTimeMilliseconds =
-                                          DateTime.now().toUtc().millisecondsSinceEpoch;
-                                      // Modify the structure of the order data according to your requirements
-                                      Map<String, dynamic> orderData = {
-                                        'order': value,
-                                        'status': 20,
-                                        'timestamp': unixTimeMilliseconds,
-                                      };
-
-
-                                      newOrderRef.set(orderData).then((value) {
-                                        print(
-                                            'Product pushed to machine-orders successfully.');
-                                      }).catchError((error) {
-                                        print(
-                                            'Failed to push product to machine-orders: $error');
-                                      });
-                                    });
-                                  }
-                                  store().removeCart(widget.machineId);
-                                });
-                              } catch (e) {
-                                print('Error: $e');
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Operation failed')),
-                                );
-                              }
                             }
                           },
                           child: Container(
-                              width: 260,
-                              height: 67,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(40),
-                                  topRight: Radius.circular(40),
-                                ),
-                                color: Colors.red[700],
+                            width: 260,
+                            height: 67,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(40),
+                                topRight: Radius.circular(40),
                               ),
-                              child: Center(
-                                  child: Text("Proceed",
-                                      style: TextStyle(
-                                          fontSize: 30, color: Colors.white)))),
+                              color: Colors.red[700],
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Proceed",
+                                style: TextStyle(fontSize: 30, color: Colors.white),
+                              ),
+                            ),
+                          ),
                         );
                       } else {
                         return Center(
@@ -536,5 +472,138 @@ class _PaymentState extends State<Payment> {
         ),
       ),
     );
+  }
+  createMachineOrder(List<Map<dynamic, dynamic>> products){
+    try {
+
+      DatabaseReference ordersRef = dprf.child('machine-orders').child(widget.machineId);
+      DatabaseReference newOrderRef = ordersRef.push();
+      var unixTimeMilliseconds = DateTime.now().toUtc().millisecondsSinceEpoch;
+
+      Map<String, dynamic> orderData = {
+        'order': {},
+        'status': 20,
+        'timestamp': unixTimeMilliseconds,
+      };
+
+      for (Map<dynamic, dynamic> product in products) {
+        String productID = product['id'];
+        String productName = product['name'];
+        String productsDetails = product['details'];
+        int productsprice = product['price'];
+        String productsimage = product['image'];
+        int productsamount = product['amount'];
+        int productsPosition = product['position'];
+
+        Map<String, dynamic> productData = {
+          'productID': productID,
+          'name': productName,
+          'details': productsDetails,
+          'price': productsprice,
+          'image': productsimage,
+          'amount': productsamount,
+          'position': productsPosition,
+        };
+        print("productID $productID");
+        print("productName $productName");
+        print("productsDetails $productsDetails");
+        print("productsprice $productsprice");
+        print("productsimage $productsimage");
+        print("productsamount $productsamount");
+        orderData['order'][productID] = productData;
+      }
+
+      newOrderRef.set(orderData).then((value) {
+        print('Products pushed to machine-orders successfully.');
+      }).catchError((error) {
+        print('Failed to push products to machine-orders: $error');
+      });
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Operation failed')),
+      );
+    }
+  }
+  createUserOrder(List<Map<dynamic, dynamic>> products) {
+    try {
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
+      DatabaseReference ordersRef = dprf.child('user-orders').child(userId!).child(widget.machineId);
+      DatabaseReference newOrderRef = ordersRef.push();
+      var unixTimeMilliseconds = DateTime.now().toUtc().millisecondsSinceEpoch;
+
+      Map<String, dynamic> orderData = {
+        'order': {},
+        'status': 20,
+        'timestamp': unixTimeMilliseconds,
+      };
+
+      for (Map<dynamic, dynamic> product in products) {
+        String productID = product['id'];
+        String productName = product['name'];
+        String productsDetails = product['details'];
+        int productsprice = product['price'];
+        String productsimage = product['image'];
+        int productsamount = product['amount'];
+        int productsPosition = product['position'];
+
+        Map<String, dynamic> productData = {
+          'productID': productID,
+          'name': productName,
+          'details': productsDetails,
+          'price': productsprice,
+          'image': productsimage,
+          'amount': productsamount,
+          'position': productsPosition,
+        };
+        print("productID $productID");
+        print("productName $productName");
+        print("productsDetails $productsDetails");
+        print("productsprice $productsprice");
+        print("productsimage $productsimage");
+        print("productsamount $productsamount");
+        orderData['order'][productID] = productData;
+      }
+
+      newOrderRef.set(orderData).then((value) {
+        print('Products pushed to user-orders successfully.');
+        // store().removeCart(widget.machineId);
+      }).catchError((error) {
+        print('Failed to push products to user-orders: $error');
+      });
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Operation failed')),
+      );
+    }
+  }
+
+  saveCartInfo() {
+    try {
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
+      DatabaseReference userRef = dprf.child('user').child(userId!);
+      userRef.update({
+        'cardInfo': {
+          'CardName': CardName,
+          'CardNamber': CardNamber,
+          'EpiringOn': EpiringOn,
+          'ccv': ccv,
+          'cardtype': _character,
+        }
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Successfully payment')),
+      );
+      // Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const NavigationBottom()),
+      //     (Route<dynamic> route) => false);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Something went wrong')),
+      );
+      Navigator.of(context).pop();
+    }
   }
 }

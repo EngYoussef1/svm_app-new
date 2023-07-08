@@ -8,12 +8,11 @@ import '../models/machinesClass.dart';
 
 class store {
   String? Id =FirebaseAuth.instance.currentUser?.uid;
-  addMachine(   userID,name, image, latitude, longitude,slots,details) {
+  addMachine(   userID,name, image, location,slots,details) {
     dprf.child('machines').child(userID!).set({
       kmachinename: name,
       kmachineimage: image,
-      klatitude: latitude,
-      klongitude: longitude,
+      klocation: location,
       kmachineslots:slots,
       'state':'',
       kmachineDetails:details,
@@ -219,7 +218,7 @@ class store {
   Future<List<Map<String, dynamic>>?> getUsreProductOrder(machineId,userId,productID) async {
 
     DatabaseReference ordersRef = FirebaseDatabase.instance.ref().child('user-orders')
-        .child(userId).child(machineId).child(productID);
+        .child(userId).child(machineId).child(productID).child('order');
 
     try {
       DatabaseEvent event = await ordersRef.once();
@@ -247,5 +246,83 @@ class store {
 
     return null;
   }
+  Future<List<Map<String, dynamic>>?> getMachineOrder(machineId,productID) async {
 
+    DatabaseReference ordersRef = FirebaseDatabase.instance.ref().child('machine-orders')
+        .child(machineId).child(productID).child('order');
+
+    try {
+      DatabaseEvent event = await ordersRef.once();
+      DataSnapshot snapshot = event.snapshot;
+      dynamic ordersData = snapshot.value;
+
+      if (ordersData != null && ordersData is Map) {
+        List<Map<String, dynamic>> ordersList = [];
+
+        ordersData.forEach((productId, orderData) {
+          if (orderData is Map) {
+            Map<String, dynamic> orderItemData = orderData.cast<String, dynamic>(); // add the product id to the order data map
+            ordersList.add(orderItemData);
+          }
+        });
+
+        return ordersList;
+      } else {
+        print('No orders found for the user and machine.');
+      }
+    } catch (error) {
+      print('Failed to retrieve orders data from Firebase: $error');
+    }
+
+    return null;
+  }
+  void creatUserFavorite( machineID,data ) {
+
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    dprf
+        .child('User_favorite')
+        .child(userId!)
+        .child(machineID)
+        .set(data)
+        .then((value) => print('favorite machine added successfully'))
+        .catchError((error) => print('Failed to add favorite machine: $error'));
+  }
+  Future<void> removeFromUserFavorite(machineId) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+      DatabaseReference cartRef =  dprf.child('User_favorite') .child(userId!);
+      await cartRef.child(machineId).remove();
+
+  }
+  Future<List<Map<String, dynamic>>?> getUserFavorite() async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    DatabaseReference UserFavoriteRef = dprf.child('User_favorite') .child(userId!);
+
+    try {
+      DatabaseEvent event = await UserFavoriteRef.once();
+      DataSnapshot snapshot = event.snapshot;
+      dynamic UserFavoriteData = snapshot.value;
+
+      if (UserFavoriteData != null && UserFavoriteData is Map) {
+        List<Map<String, dynamic>> UserFavoriteList = [];
+
+        UserFavoriteData.forEach((key, value) {
+          String machineId = key.toString();
+          if (value is Map) {
+            Map<String, dynamic>UserFavoriteData = value.cast<String, dynamic>();
+            UserFavoriteData['id'] = machineId; // Add the 'id' key to the machine data map
+            UserFavoriteList.add(UserFavoriteData);
+          }
+        });
+
+        return UserFavoriteList;
+      } else {
+        print('No UserFavorite found in the database.');
+      }
+
+      return null;
+    } catch (error) {
+      print('Failed to retrieve data from Firebase: $error');
+      return null;
+    }
+  }
 }

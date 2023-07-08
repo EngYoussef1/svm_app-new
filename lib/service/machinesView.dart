@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -18,7 +19,11 @@ class _machinesState extends State<machines> {
    final Future<List<Map<dynamic, dynamic>>?> machine = store().getNewMachine();
 
    List<int> selectedItem = [];
-
+   DatabaseReference cheackmachinefavorite(machineID){
+  String? userId = FirebaseAuth.instance.currentUser?.uid;
+  DatabaseReference UserFavoriteRef = dprf.child('User_favorite') .child(userId!).child(machineID).child('isFavorite');
+  return UserFavoriteRef;
+}
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<dynamic, dynamic>>?>(
@@ -50,13 +55,15 @@ class _machinesState extends State<machines> {
                 String machineDetails = machineData['details'];
                 String machineIds =machineData['id'] ;
                 bool isfavorite =machineData['isfavorite'];
+                String machinelocation =machineData['location'] ;
+                String machineimage =machineData['image'] ;
                 // Retrieve other properties as needed
 
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyMachine(machineId: machineIds)),
+                      MaterialPageRoute(builder: (context) => MyMachine(machineId: machineIds,location:machinelocation)),
                     );
                     print(machineData['id']);
                   },
@@ -87,8 +94,8 @@ class _machinesState extends State<machines> {
                                 ),
                                 border: Border.all(color: Colors.black),
                                 image: DecorationImage(
-                                  image: AssetImage(
-                                    'images/firstentry.png',
+                                  image: NetworkImage(
+                                    machineimage,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -113,16 +120,24 @@ class _machinesState extends State<machines> {
                                               if (selectedItem.contains(index)) {
                                                 selectedItem.remove(index);
                                                 store().updateMachineValue(machineIds, {'isfavorite':false});
+                                                store().removeFromUserFavorite(machineIds);
                                               } else {
                                                 selectedItem.add(index);
                                                 store().updateMachineValue(machineIds, {'isfavorite':true});
+                                                store().creatUserFavorite(machineIds,{
+                                                   'name' :machineName,
+                                                  'details':machineDetails,
+                                                  'location':machinelocation,
+                                                  'image':machineimage,
+                                                  'isFavorite':isfavorite
+                                                });
                                               }
                                               setState(() {});
                                             },
                                             icon: Icon(selectedItem.contains(index)||isfavorite == true
                                                 ? Icons.favorite
                                                 : Icons.favorite_border),
-                                            color: selectedItem.contains(index)||isfavorite == true  ? Colors.red : Colors.red,
+                                            color: selectedItem.contains(index)||isfavorite == true  ? Colors.red : null,
                                           ),
                                         ],
                                       ),

@@ -92,13 +92,10 @@ class Orderdetails extends StatelessWidget {
                                                               Map<dynamic, dynamic> productsData =
                                                               products[index];
                                                               String productsName = productsData['name'];
-                                                              String productsDetails =
-                                                              productsData['details'];
+                                                              String productsDetails = productsData['details'];
                                                               int productsamount = productsData['amount'];
-                                                              String productsimage =
-                                                              productsData['image'];
                                                               int productsprice = productsData['price'];
-                                                              String productID = productsData['id'];
+
                                                               return Column(
                                                                 children: [
                                                                   ListTile(
@@ -120,61 +117,49 @@ class Orderdetails extends StatelessWidget {
                                                                     ),
                                                                   ),
                                                                   SizedBox(height: 10,),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.all(10),
-                                                                    child: Divider(thickness: 1, color: Colors.black),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                                                    child: Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                      children: [
-                                                                        Text("Total:", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                                                        Text("\$${productsprice}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                                                      ],
-                                                                    ),
-                                                                  )
+
                                                                 ],
                                                               );
                                                             }),
+
                                                       ),
 
-                                                      // Container(
-                                                      //   height: 100,
-                                                      //   child: Column(
-                                                      //     children: [
-                                                      //       Padding(
-                                                      //         padding: const EdgeInsets.symmetric(
-                                                      //             horizontal: 10),
-                                                      //         child: Divider(
-                                                      //           thickness: 1,
-                                                      //           color: Colors.black,
-                                                      //         ),
-                                                      //       ),
-                                                      //       Padding(
-                                                      //         padding: const EdgeInsets.symmetric(
-                                                      //             horizontal: 15),
-                                                      //         child: Row(
-                                                      //           mainAxisAlignment:
-                                                      //           MainAxisAlignment.spaceBetween,
-                                                      //           children: [
-                                                      //             Text("Total:",
-                                                      //                 style: TextStyle(
-                                                      //                     fontSize: 25,
-                                                      //                     fontWeight: FontWeight.bold)),
-                                                      //             Text("\$${totalPrice}",
-                                                      //                 style: TextStyle(
-                                                      //                     fontSize: 25,
-                                                      //                     fontWeight: FontWeight.bold))
-                                                      //           ],
-                                                      //         ),
-                                                      //       ),
-                                                      //       SizedBox(
-                                                      //         height: 15,
-                                                      //       ),
-                                                      //     ],
-                                                      //   ),
-                                                      // ),
+                                                      Container(
+                                                        height: 100,
+                                                        child: Column(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(
+                                                                  horizontal: 10),
+                                                              child: Divider(
+                                                                thickness: 1,
+                                                                color: Colors.black,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(
+                                                                  horizontal: 15),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  Text("Total:",
+                                                                      style: TextStyle(
+                                                                          fontSize: 25,
+                                                                          fontWeight: FontWeight.bold)),
+                                                                  Text("\$${totalPrice}",
+                                                                      style: TextStyle(
+                                                                          fontSize: 25,
+                                                                          fontWeight: FontWeight.bold))
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ],
                                                   );
                                                 } else {
@@ -188,7 +173,8 @@ class Orderdetails extends StatelessWidget {
                                                 );
                                               } else {
                                                 return Center(
-                                                  child: Text('cart is empty'),
+                                                  child: CircularProgressIndicator(),
+                                                  // child: Text('cart is empty'),
                                                 );
                                               }
                                             },
@@ -215,7 +201,8 @@ class Orderdetails extends StatelessWidget {
                   );
                 } else {
                   return Center(
-                    child: Text('cart is empty'),
+                    child: CircularProgressIndicator(),
+                    // child: Text('cart is empty'),
                   );
                 }
               },

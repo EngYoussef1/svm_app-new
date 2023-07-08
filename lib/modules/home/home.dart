@@ -1,11 +1,14 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../layout/layout.dart';
 import '../../service/imageBanner.dart';
 import '../../service/machinesView.dart';
+import '../../shared/cnstant/contant.dart';
 import '../Drawer/drawer.dart';
 import '../My machines/my machine.dart';
+import '../payment/machinePayment.dart';
 import '../search/search.dart';
 
 class Home extends StatelessWidget {
@@ -57,8 +60,37 @@ class Home extends StatelessWidget {
                 onPressed: () {
                   try{
                     FlutterBarcodeScanner.scanBarcode('#2A99CF', 'cancel', true, ScanMode.QR).then((value){
-                      if(value==null){
+                      if(value!=null){
+                        List<String> splitString = value.split("/");
+                        String machineID = splitString[0];
+                        String productID = splitString[1];
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (BuildContext context) {
+                        //       return MachinePayment( machineId: machineID,productID: productID);
+                        //     },
+                        //   ),
+                        // );
+                        DatabaseReference status =dprf.child('machine-orders').child(machineID).child(productID).child('status');
+                        if(status==0){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return MachinePayment( machineId: machineID,productID: productID);
+                              },
+                            ),
+                          );
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('qr code had been scanned')),);
+                        }
 
+                        dprf.child('machine-orders').child(machineID!).child(productID).update(
+                            {
+                              'status': 10,
+                            });
                       }else{
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('machine qr is wrong')),

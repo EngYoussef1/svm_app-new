@@ -35,7 +35,7 @@ class Assets {
   static const String networkNetwork = 'lib/shared/network/network.dart';
   static const String paymentControllerPaymentCubitCubit = 'lib/modules/payment/tryPayment/paymentController/payment_cubit_cubit.dart';
   static const String paymentControllerPaymentCubitState = 'lib/modules/payment/tryPayment/paymentController/payment_cubit_state.dart';
-  static const String paymentPayment = 'lib/modules/payment/payment.dart';
+  static const String paymentPayment = 'lib/modules/payment/Userpayment.dart';
   static const String paymentScanQr = 'lib/modules/payment/scan_qr.dart';
   static const String screensRegisterScreen = 'lib/modules/payment/tryPayment/Screens/register_screen.dart';
   static const String screensToggleScreen = 'lib/modules/payment/tryPayment/Screens/toggle_screen.dart';

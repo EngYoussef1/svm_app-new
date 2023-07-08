@@ -9,7 +9,7 @@ import '../../shared/componant/counter_operations.dart';
 
 import '../Drawer/drawer.dart';
 import '../hold out/hold out.dart';
-import '../payment/payment.dart';
+import '../payment/Userpayment.dart';
 
 class MyCart extends StatefulWidget {
   final String machineId;
@@ -234,7 +234,7 @@ class _MyCartState extends State<MyCart> {
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) {
-                              return Payment( machineId: widget.machineId,);
+                              return UserPayment( machineId: widget.machineId,);
                             },
                           ),
                         );

@@ -15,9 +15,9 @@ class editMachine extends StatelessWidget {
   final Future<List<Map<dynamic, dynamic>>?> machines = store().getNewMachine();
 
 
-  String _name='',_image='',_details='';
+  String _name='',_image='',_details='',_location='';
 
-  double _longitude=0,_latitude=0;
+
   int _slots=0;
 
   TextEditingController namecontroller = TextEditingController();
@@ -46,14 +46,11 @@ chackupdatedvalue(){
 
     _store.updateMachineValue(machineId,{ 'slots': _slots});
   }
-  if(_latitude!=0){
+  if(_location!=0){
 
-    _store.updateMachineValue(machineId,{ 'latitude': _latitude});
+    _store.updateMachineValue(machineId,{ 'location': _location});
   }
-  if(_longitude!=0){
 
-    _store.updateMachineValue(machineId,{ 'longitude': _longitude});
-  }
   if(_image.isNotEmpty){
     _store.updateMachineValue(machineId,{ 'image': _image});
   }
@@ -149,10 +146,10 @@ chackupdatedvalue(){
                 ),
                 TextFormField(
                   controller: latitudecontroller,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'latitude',
+                    labelText: 'location',
                     labelStyle: TextStyle(fontSize: 30),
                   ),
                   // validator: (value) {
@@ -165,35 +162,12 @@ chackupdatedvalue(){
                   onChanged: (value) {
                     print(value);
                     if (value.isNotEmpty) {
-                      _latitude = double.parse(value);
+                      _location = value;
                     }
                   },
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: longitudecontroller,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'longitude',
-                    labelStyle: TextStyle(fontSize: 30),
-                  ),
-                  // validator: (value) {
-                  //   if (value!.isEmpty) {
-                  //     return 'longitude must not be empty';
-                  //   }
-                  //
-                  //   return null;
-                  // },
-                  onChanged: (value) {
-                    print(value);
-                    if (value.isNotEmpty) {
-                      _longitude = double.parse(value);
-                    }
-                  },
-                ),
+
+
                 SizedBox(
                   height: 20,
                 ),
