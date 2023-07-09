@@ -57,40 +57,59 @@ class Home extends StatelessWidget {
                 icon:  Icon(Icons.search,),
               ),
               IconButton(
-                onPressed: () {
+                onPressed: () async{
                   try{
-                    FlutterBarcodeScanner.scanBarcode('#2A99CF', 'cancel', true, ScanMode.QR).then((value){
+                    FlutterBarcodeScanner.scanBarcode('#2A99CF', 'cancel', true, ScanMode.QR).then((value) async {
                       if(value!=null){
                         List<String> splitString = value.split("/");
                         String machineID = splitString[0];
                         String productID = splitString[1];
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (BuildContext context) {
-                        //       return MachinePayment( machineId: machineID,productID: productID);
-                        //     },
-                        //   ),
-                        // );
-                        DatabaseReference status =dprf.child('machine-orders').child(machineID).child(productID).child('status');
-                        if(status==0){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return MachinePayment( machineId: machineID,productID: productID);
-                              },
-                            ),
-                          );
-                        }else{
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('qr code had been scanned')),);
-                        }
-
+                        print(productID);
+                        print(machineID);
                         dprf.child('machine-orders').child(machineID!).child(productID).update(
                             {
                               'status': 10,
                             });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return MachinePayment( machineId: machineID,productID: productID);
+                            },
+                          ),
+                        );
+                        // final DatabaseReference statusRef = dprf.child('machine-orders').child('machineID').child('productID').child('status');
+                        //
+                        // void handleStatusChange(DatabaseEvent event) {
+                        //   // Extract the DataSnapshot object from the DatabaseEvent object
+                        //   final DataSnapshot snapshot = event.snapshot;
+                        //
+                        //   // Get the value of the status child node
+                        //   final status = snapshot.value;
+                        //
+                        //   // Handle the status change
+                        //   print(status);
+                        //   if(status==0){
+                        //     dprf.child('machine-orders').child(machineID!).child(productID).update(
+                        //         {
+                        //           'status': 10,
+                        //         });
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (BuildContext context) {
+                        //           return MachinePayment( machineId: machineID,productID: productID);
+                        //         },
+                        //       ),
+                        //     );
+                        //   }else{
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       const SnackBar(content: Text('qr code had been scanned')),);
+                        //   }
+                        // }
+
+
+
                       }else{
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('machine qr is wrong')),

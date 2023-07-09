@@ -24,7 +24,7 @@ class Orderdetails extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Column(
+        child: Stack(
           children: [
             //Order details
             FutureBuilder<List<Map<dynamic, dynamic>>?>(
@@ -37,7 +37,7 @@ class Orderdetails extends StatelessWidget {
                     return Column(
                       children: [
                         Container(
-                          height: 600,
+                          height: 740,
                           child: ListView.builder(
                               itemCount: products.length,
                               itemBuilder: (context, index) {
@@ -208,21 +208,31 @@ class Orderdetails extends StatelessWidget {
               },
             ),
             SizedBox(height: 30,),
-            MaterialButton(onPressed: (){},
-              child: Container(
-                  width: 270,
-                  height: 67,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
+            Container(
+              alignment: Alignment.bottomCenter,
+              height: 740,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  MaterialButton(onPressed: (){},
+                    child: Container(
+                        width: 270,
+                        height: 67,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(40),
+                            topRight: Radius.circular(40),
+                          ),
+
+
+                          color: Colors.red[700],
+
+                        ),
+                        child: Center(child: Text("Buy Again",style: TextStyle(fontSize:30,color: Colors.white  )))
                     ),
-
-
-                    color: Colors.red[700],
-
                   ),
-                  child: Center(child: Text("Buy Again",style: TextStyle(fontSize:30,color: Colors.white  )))
+                ],
               ),
             ),
 

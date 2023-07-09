@@ -387,13 +387,13 @@ class _userPaymentState extends State<UserPayment> {
                                                 ),
                                               );
 
-                                              // Navigator.pushAndRemoveUntil(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (context) =>
-                                              //             const NavigationBottom()),
-                                              //     (Route<dynamic> route) =>
-                                              //         false);
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const NavigationBottom()),
+                                                  (Route<dynamic> route) =>
+                                                      false);
                                             } catch (e) {
                                               ScaffoldMessenger.of(context).showSnackBar(
                                                 const SnackBar(
@@ -420,12 +420,12 @@ class _userPaymentState extends State<UserPayment> {
                                       content: Text('Successfully payment')
                                   ),
                                 );
-                                // Navigator.pushAndRemoveUntil(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const NavigationBottom()),
-                                //     (Route<dynamic> route) => false);
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const NavigationBottom()),
+                                    (Route<dynamic> route) => false);
                               }
                               createMachineOrder(products);
                               createUserOrder(products);
@@ -567,7 +567,7 @@ class _userPaymentState extends State<UserPayment> {
 
       newOrderRef.set(orderData).then((value) {
         print('Products pushed to user-orders successfully.');
-        // store().removeCart(widget.machineId);
+        store().removeCart(widget.machineId);
       }).catchError((error) {
         print('Failed to push products to user-orders: $error');
       });
@@ -595,10 +595,10 @@ class _userPaymentState extends State<UserPayment> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully payment')),
       );
-      // Navigator.pushAndRemoveUntil(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const NavigationBottom()),
-      //     (Route<dynamic> route) => false);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const NavigationBottom()),
+          (Route<dynamic> route) => false);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Something went wrong')),
