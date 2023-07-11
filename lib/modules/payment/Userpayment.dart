@@ -367,7 +367,7 @@ class _userPaymentState extends State<UserPayment> {
                         return MaterialButton(
                           onPressed: () async {
                             List<Map<String, dynamic>>? userData =
-                            await store().fetchUserData(Id);
+                            await store().fetchUserCardInfo(Id);
                             print(userData);
                             if (formKey.currentState!.validate()) {
                               if (userData == null) {

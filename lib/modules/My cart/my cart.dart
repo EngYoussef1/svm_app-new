@@ -98,7 +98,7 @@ class _MyCartState extends State<MyCart> {
                                           trailing: IconButton(
                                               onPressed: (){
                                                 setState(() {
-                                                  store().removeFromCart(productID,widget.machineId);
+                                                  store().removeProductFromCart(productID,widget.machineId);
                                                 });
 
                                               },

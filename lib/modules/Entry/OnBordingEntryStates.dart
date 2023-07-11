@@ -29,7 +29,7 @@ class _OnboardingEntryModeState extends State<OnboardingEntryMode> {
   void _setOnboardingCompleted() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasCompletedOnboarding', true);
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => Sign_in()));
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => Sign_in()));
   }
 
   @override

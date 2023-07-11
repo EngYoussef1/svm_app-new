@@ -14,7 +14,7 @@ class ViewProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('viewProduct'),
+        title: Text('View Product'),
       ),
       body: Column(
         children: [

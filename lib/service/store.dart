@@ -8,7 +8,7 @@ import '../models/machinesClass.dart';
 
 class store {
   String? Id =FirebaseAuth.instance.currentUser?.uid;
-  addMachine(   userID,name, image, location,slots,details) {
+  void addMachine(   userID,name, image, location,slots,details) {
     dprf.child('machines').child(userID!).set({
       kmachinename: name,
       kmachineimage: image,
@@ -50,8 +50,6 @@ class store {
       return null;
     }
   }
-
-
   void addProduct( userID ,Name,position ,price,details,image,amount) {
     // dprf.child('your_collection').get().then((DataSnapshot snapshot) {
     //   String? documentId = snapshot.key;
@@ -139,7 +137,7 @@ class store {
 
     return null;
   }
-  Future<void> removeFromCart(String productId,machineId) async {
+  Future<void> removeProductFromCart(String productId,machineId) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
 
     if (userId != null) {
@@ -155,7 +153,7 @@ class store {
       await cartRef.remove();
     }
   }
-  Future<List<Map<String, dynamic>>?> fetchUserData(id) async{
+  Future<List<Map<String, dynamic>>?> fetchUserCardInfo(id) async{
     DatabaseReference databaseReference =
     dprf.child('user').child(id).child('cardInfo');
 
@@ -185,7 +183,7 @@ class store {
 
     return null;
   }
-  Future<List<Map<String, dynamic>>?> getUsreOrder(machineId,userId) async {
+  Future<List<Map<String, dynamic>>?> getUserOrder(machineId,userId) async {
 
     DatabaseReference ordersRef = FirebaseDatabase.instance.ref().child('user-orders').child(userId).child(machineId);
 
@@ -215,7 +213,7 @@ class store {
 
     return null;
   }
-  Future<List<Map<String, dynamic>>?> getUsreProductOrder(machineId,userId,productID) async {
+  Future<List<Map<String, dynamic>>?> getUserProductOrder(machineId,userId,productID) async {
 
     DatabaseReference ordersRef = FirebaseDatabase.instance.ref().child('user-orders')
         .child(userId).child(machineId).child(productID).child('order');

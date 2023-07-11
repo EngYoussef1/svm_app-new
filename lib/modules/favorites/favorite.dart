@@ -29,7 +29,7 @@ class FavouritePageState extends State<FavouritePage> {
             // backgroundColor: Colors.red[700],
 
             title: const Text(
-              'My app',
+              'My Favorite',
               style: TextStyle(
                 // color: Colors.white,
                 // fontSize: 41,

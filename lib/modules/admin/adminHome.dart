@@ -18,7 +18,7 @@ class adminHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Admin panal')),
+        title: Center(child: Text('Admin panel')),
         leading: IconButton(
           icon: const Icon(Icons.logout,),
           onPressed: () {

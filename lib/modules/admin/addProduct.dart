@@ -21,7 +21,7 @@ class addProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('addProduct'),
+        title: Text('Add Product'),
       ),
       body: SingleChildScrollView(
         child: Padding(

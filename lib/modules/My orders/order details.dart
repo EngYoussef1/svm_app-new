@@ -28,7 +28,7 @@ class Orderdetails extends StatelessWidget {
           children: [
             //Order details
             FutureBuilder<List<Map<dynamic, dynamic>>?>(
-              future: store().getUsreOrder(machineId, Id),
+              future: store().getUserOrder(machineId, Id),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   List<Map<dynamic, dynamic>>? products = snapshot.data;
@@ -71,7 +71,7 @@ class Orderdetails extends StatelessWidget {
                                           //Date
                                           SizedBox(height: 20,),
                                           FutureBuilder<List<Map<dynamic, dynamic>>?>(
-                                            future: store().getUsreProductOrder(machineId, Id,productID),
+                                            future: store().getUserProductOrder(machineId, Id,productID),
                                             builder: (context, snapshot) {
                                               if (snapshot.hasData) {
                                                 List<Map<dynamic, dynamic>>? products = snapshot.data;

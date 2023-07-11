@@ -35,7 +35,7 @@ class MyMachine extends StatelessWidget {
 
         primary: true,
 
-        title: Text('My Machine',style:  TextStyle(fontSize: 40),),
+        title: Text('Machine Products',style:  TextStyle(fontSize: 40),),
         centerTitle: true,
       ),
       body: Column(
